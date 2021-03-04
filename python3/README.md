@@ -6,6 +6,6 @@ The `scenarios.py` file hosts the parameters : the different attacks, the round 
 
 The `attack_custom.py` file simulates your possible turns given the config files.
 
-The `attack_median.py` file does the same, but instead of inputing a custom AC it compares against the Low, Median and High AC for a given level (using [https://paizo.com/threads/rzs42o1o?Bestiary-Stats-Spreadsheet](this spreadsheet)).
+The `attack_median.py` file does the same, but instead of inputing a custom AC it compares against the Low, Median and High AC for a given level (using [this spreadsheet](https://paizo.com/threads/rzs42o1o?Bestiary-Stats-Spreadsheet)).
 
 This probably won't be updated, see the `Web src` folder for an up-to-date, hostable version.
