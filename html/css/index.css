@@ -1,0 +1,35 @@
+/* Webkit : hide input[number] ugly arrows*/
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; 
+    margin: 0; 
+}
+
+/* Firefox : hide input[number] ugly arrows*/
+input[type=number] {
+    -moz-appearance:textfield; 
+} 
+
+ /* Bulma overrides */
+
+input {
+    text-align: center;
+}
+
+.fw-buttons {
+    display: flex;
+}
+
+.fw-buttons .button {
+    flex: 1;
+}
+
+.columns {
+    margin-top : 0rem;
+}
+
+.field-label {
+    text-align: left; 
+}
