@@ -8,4 +8,4 @@ The `attack_custom.py` file simulates your possible turns given the config files
 
 The `attack_median.py` file does the same, but instead of inputing a custom AC it compares against the Low, Median and High AC for a given level (using [this spreadsheet](https://paizo.com/threads/rzs42o1o?Bestiary-Stats-Spreadsheet)).
 
-This probably won't be updated, see the `Web src` folder for an up-to-date, hostable version.
+This probably won't be updated, see the `html` folder for an up-to-date, hostable version.
