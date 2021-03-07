@@ -144,8 +144,10 @@ class Turn {
                 return false; // equivalent to break in a jQuery each
             }
         });
-        if (DEBUG && (wep_id === -1 || wep_name === "__UNKNOWN__")) {
-            console.log("No turn-atk found for name " + nm + " with last id " + wep_id + ", last name " + wep_name);
+        if (wep_id === -1 || wep_name === "__UNKNOWN__") {
+            if (DEBUG) {
+                console.log("No turn-atk found for name " + nm);
+            }
             return false;
         }
         // update attacks
@@ -309,7 +311,6 @@ class App {
             let id = $(this).closest('.atk').attr("id");
             // delete all attack links from the DOM
             $('.turn-atk-item').each(function() {
-                //console.log("del wep from to ", $(this).attr('data-wep-id'), id);  REMOVE
                 if ($(this).attr('data-wep-id') === id) {
                     $(this).remove();
                 }
@@ -345,13 +346,11 @@ class App {
 
     create_turn() {
         let turn = new Turn({});
-        //turn.generate();
         this.turns[turn.id] = turn;
     }
 
     create_attack() {
         let atk = new Attack({});
-        //atk.generate();
         this.attacks[atk.id] = atk;
     }
 }
