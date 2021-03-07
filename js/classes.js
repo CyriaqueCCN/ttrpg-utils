@@ -21,12 +21,13 @@ class Attack {
         this.deadly = to_int(params.deadly) || 0;
         this.critspec_flatfoot = params.critspec_flatfoot || false;
         this.critspec_damage = to_int(params.critspec_damage) || 0;
+        this.generate();
         this.bind_inputs();
     }
 
     bind_inputs() {
         // dynamically modify object attributes
-        $(document).on("input", ".atk-info", this, function(e) {
+        $('#' + this.id).on("input", ".atk-info", this, function(e) {
             let attr = $(this).attr("name").replace("atk_", "");
             if (attr === undefined || !Reflect.has(e.data, attr)) {
                 return false;
@@ -99,13 +100,14 @@ class Turn {
         this.id = params.id || unique_id();
         this.name = params.name || null;
         this.attacks = params.attacks || [];
+        this.generate();
         this.bind_inputs();
     }
 
     bind_inputs() {
         // kind of a problem here : we only want to remove THAT occurrence of the turn-atk
         // solution : keep how many occurrences of it we have
-        $(document).on("click", ".turn-atk-remove", this, function(e) {
+        $('#' + this.id).on("click", ".turn-atk-remove", this, function(e) {
             let $rem = $(this).closest('.turn-atk-item');
             let a_id = $rem.attr('data-wep-id');
             let a_oc = to_int($rem.attr("data-wep-occur"));
@@ -120,18 +122,18 @@ class Turn {
             // also dereference it
         });
 
-        $(document).on("input", ".turn-name", this, function(e) {
+        $('#' + this.id).on("input", ".turn-name", this, function(e) {
             e.data.name = $(this).val();
         });
 
-        $(document).on("click", ".turn-atk-add", this, function(e) {
-            e.data.link_attack($(this));
+        $('#' + this.id).on("click", ".turn-atk-add", this, function(e) {
+            e.data.link_attack($(this).closest(".turn-atk-infos").find('.turn-atk-add-name'));
+            return false;
         });
     }
 
-    link_attack($ev) {
-        let $parent = $ev.parent('div').prev('div').children('input.turn-attack-name');
-        let nm = $parent.val().toLowerCase().trim();
+    link_attack($ev) {;
+        let nm = $ev.val().toLowerCase().trim();
         let wep_name = "__UNKNOWN__";
         let wep_id = -1;
         $('.atk').each(function() {
@@ -143,7 +145,7 @@ class Turn {
             }
         });
         if (DEBUG && (wep_id === -1 || wep_name === "__UNKNOWN__")) {
-            console.log("No turn-atk found for name" + nm + " with last id " + wep_id + ", last name " + wep_name);
+            console.log("No turn-atk found for name " + nm + " with last id " + wep_id + ", last name " + wep_name);
             return false;
         }
         // update attacks
@@ -157,7 +159,7 @@ class Turn {
         let $target = $('#' + wep_id.toString()).find('.atk-name');
         $wep.find('.turn-atk-name').text($target.val());
         $wep.attr("id", unique_id());
-        $parent.val("");
+        $ev.val("");
     }
 
     generate() {
@@ -307,7 +309,7 @@ class App {
             let id = $(this).closest('.atk').attr("id");
             // delete all attack links from the DOM
             $('.turn-atk-item').each(function() {
-                console.log("del wep from to ", $(this).attr('data-wep-id'), id);
+                //console.log("del wep from to ", $(this).attr('data-wep-id'), id);  REMOVE
                 if ($(this).attr('data-wep-id') === id) {
                     $(this).remove();
                 }
@@ -343,13 +345,13 @@ class App {
 
     create_turn() {
         let turn = new Turn({});
-        turn.generate();
+        //turn.generate();
         this.turns[turn.id] = turn;
     }
 
     create_attack() {
         let atk = new Attack({});
-        atk.generate();
+        //atk.generate();
         this.attacks[atk.id] = atk;
     }
 }
