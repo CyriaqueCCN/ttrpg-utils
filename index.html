@@ -32,21 +32,36 @@
     <div class="container">
         <section class="section pt-4 pb-1">
             <div class="box">
-                <div class="columns">
+                <div class="columns monster-stats">
                     <div class="column is-2"><h4 class="title is-4">Monster Stats</h4></div>
-                    <div class="column is-2">
+                    <div class="column is-1">
                         <div class="field">
-                            <input class="input is-info" type="number" placeholder="Monster AC" name="monster_ac">
+                            <input class="input is-info monster-info" type="number" placeholder="AC" name="monster_ac">
                         </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-hidden" hidden>
                         <div class="field">
-                            <input class="input is-info" type="text" placeholder="Monster Resistances (not supported yet)" disabled name="monster_resists">
+                            <input class="input is-info monster-info" type="text" placeholder="Name" name="monster_name">
                         </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column">
                         <div class="field">
-                            <input class="input is-info" type="text" placeholder="Monster immunities (not supported yet)" disabled name="monster_immuns">
+                            <input class="input is-info monster-info" type="text" disabled placeholder="Debuffs (not supported yet)" name="monster_debuffs">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input is-info monster-info" type="text" disabled placeholder="Vulnerabilites (not supported yet)" name="monster_vulns">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input is-info monster-info" type="text" disabled placeholder="Resistances (not supported yet)" name="monster_resists">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input is-info monster-info" type="text" disabled placeholder="Immunities (not supported yet)" name="monster_immuns">
                         </div>
                     </div>
                 </div>
@@ -161,10 +176,10 @@
                     <div class="field-body">
                         <div class="field is-grouped">
                             <p class="control is-expanded">
-                                <input class="input atk-name" type="text" placeholder="Weapon Name">
+                                <input class="input atk-name atk-info" type="text" placeholder="Weapon Name" name="atk_name">
                             </p>
                             <p class="control">
-                                <input class="input atk-hit-bonus" type="number" placeholder="Hit bonus">
+                                <input class="input atk-hit-bonus atk-info" type="number" placeholder="Hit bonus" name="atk_hit_bonus">
                             </p>
                         </div>
                     </div>
@@ -178,19 +193,19 @@
                         <div class="is-expanded">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input class="input atk-wep-number" type="number" placeholder="0">
+                                    <input class="input atk-wep-number atk-info" type="number" placeholder="0" name="atk_damage_die_number">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">D</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-wep-size" type="number" placeholder="0">
+                                    <input class="input atk-wep-size atk-info" type="number" placeholder="0" name="atk_damage_die_size">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">+</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-wep-flat" type="number" placeholder="0">
+                                    <input class="input atk-wep-flat atk-info" type="number" placeholder="0" name="atk_damage_bonus">
                                 </div>
                             </div>
                             <p class="help">Weapon normal damage die</p>
@@ -205,19 +220,19 @@
                         <div class="is-expanded">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input class="input atk-echt-number" type="number" placeholder="0">
+                                    <input class="input atk-echt-number atk-info" type="number" placeholder="0" name="atk_enchants_die_number">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">D</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-echt-size" type="number" placeholder="0">
+                                    <input class="input atk-echt-size atk-info" type="number" placeholder="0" name="atk_enchants_die_size">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">+</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-echt-flat" type="number" placeholder="0">
+                                    <input class="input atk-echt-flat atk-info" type="number" placeholder="0" name="atk_enchants_damage_bonus">
                                 </div>
                             </div>
                             <p class="help">Weapon enchantments and bonuses</p>
@@ -232,19 +247,19 @@
                         <div class="is-expanded">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input class="input atk-prec-number" type="number" placeholder="0">
+                                    <input class="input atk-prec-number atk-info" type="number" placeholder="0" name="atk_precision_die_number">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">D</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-prec-size" type="number" placeholder="0">
+                                    <input class="input atk-prec-size atk-info" type="number" placeholder="0" name="atk_precision_die_size">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">+</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-prec-flat" type="number" placeholder="0">
+                                    <input class="input atk-prec-flat atk-info" type="number" placeholder="0" name="atk_precision_damage_bonus">
                                 </div>
                             </div>
                             <p class="help">Precision damage such as sneak attack (the flat bonus isn't multiplied on a crit)</p>
@@ -259,19 +274,19 @@
                         <div class="is-expanded">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input class="input atk-nc-number" type="number" placeholder="0">
+                                    <input class="input atk-nc-number atk-info" type="number" placeholder="0" name="atk_noncrit_die_number">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">D</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-nc-size" type="number" placeholder="0">
+                                    <input class="input atk-nc-size atk-info" type="number" placeholder="0" name="atk_noncrit_die_size">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static">+</a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-nc-flat" type="number" placeholder="0">
+                                    <input class="input atk-nc-flat atk-info" type="number" placeholder="0" name="atk_noncrit_damage_bonus">
                                 </div>
                             </div>
                             <p class="help">This damage will not be multiplied on a crit</p>
@@ -286,26 +301,26 @@
                         <div class="is-expanded">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input class="input atk-fatal" type="number" placeholder="Fatal">
+                                    <input class="input atk-fatal atk-info" type="number" placeholder="Fatal" name="atk_fatal">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static"> / </a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-deadly" type="number" placeholder="Deadly">
+                                    <input class="input atk-deadly atk-info" type="number" placeholder="Deadly" name="atk_deadly">
                                 </div>
                                 <div class="control">
                                     <a class="button is-static"> / </a>
                                 </div>
                                 <div class="control">
-                                    <input class="input atk-crit-flat" type="number" placeholder="Crit spec bonus">
+                                    <input class="input atk-crit-flat atk-info" type="number" placeholder="Crit spec bonus" name="atk_critspec_damage">
                                 </div>
                             </div>
                             <p class="help">Input the die size if the weapon has the Deadly or Fatal trait, plus the critical specialisation damage bonus (if any)</p>
                         </div>
                     </div>
                 </div>
-                <input class="input atk-crit-flatfoot is-hidden" hidden type="text" placeholder="Flatfoot on crit ?" value="false">
+                <input class="input atk-crit-flatfoot atk-info is-hidden" hidden type="text" placeholder="Flatfoot on crit ?" value="false" name="atk_critspec_flatfoot">
             </div>
             </div>
         </div>
@@ -332,7 +347,7 @@
                     <div class="field-body">
                         <div class="field is-grouped">
                             <p class="control is-expanded">
-                                <input class="input turn-name" type="text" placeholder="Turn Name">
+                                <input class="input turn-name" type="text" placeholder="Turn Name" name="turn-name">
                             </p>
                         </div>
                     </div>
@@ -345,28 +360,28 @@
                         <div class="field-body">
                             <div class="field has-addons">
                                 <div class="control is-expanded">
-                                    <input class="input" type="text" placeholder="Attack Name">
+                                    <input class="input turn-atk-add-name" type="text" placeholder="Attack Name" name="turn-atk-add-name">
                                 </div>
                                 <div class="control">
-                                    <a class="button is-primary weapon-add">Add</a>
+                                    <a class="button is-primary turn-atk-add">Add</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="divider">Attacks</div>
-                    <div class="weapon-list">
+                    <div class="turn-atk-list">
                     </div>
                 </div>
             </div>
         </div>
     </template>
-    <template id="weapon-tmpl">
-        <div class="field is-horizontal weapon-item">
+    <template id="turn-atk-tmpl">
+        <div class="field is-horizontal turn-atk-item">
             <div class="field-body">
                 <div class="field is-expanded">
                     <div class="buttons has-addons fw-buttons">
-                        <a class="button is-static weapon-name"></a>
-                        <a class="button is-danger weapon-remove">Remove</a>
+                        <a class="button is-static turn-atk-name"></a>
+                        <a class="button is-danger turn-atk-remove">Remove</a>
                     </div>
                 </div>
             </div>
@@ -406,11 +421,12 @@
     <footer class="site-footer">
         <div class="footer pb-4 pt-4">
             <div class="content has-text-centered">
-                <p><a href="https://github.com/CyriaqueCCN/PF2-DPR-Calculator/tree/main/html">Source code</a> - Pull requests and issues are welcome. License <a href="https://opensource.org/licenses/mit-license.php">MIT</a>.</p>
+                <p><a href="https://github.com/CyriaqueCCN/PF2-DPR-Calculator/tree/main/html">Source code</a> - Pull requests and issues are welcome. License <a href="https://opensource.org/licenses/mit-license.php">MIT</a>. Other works : <a href="https://docs.google.com/spreadsheets/d/1t4ZdpXQj_n8W6fUkOGCYsdd4SKJF0cnZLMDl4_o8myw">Earn income calculator</a></p>
             </div>
         </div>
     </footer>
     <!-- JS afterload -->
+    <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/classes.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/fa/all.js"></script>
