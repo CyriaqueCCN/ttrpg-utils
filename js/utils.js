@@ -4,11 +4,11 @@
 DEBUG = true;
 DEBUG_DPR = true;
 TOPLEVEL_SEP = /[;,]+/;
-SUBLEVEL_SEP = /[: ]+/;
+SUBLEVEL_SEP = /[:\s\t]+/;
 
 // JS sucks...
 function is_empty(obj) {
-    return obj === null || Object.keys(obj).length === 0;
+    return obj === undefined || obj === null || Object.keys(obj).length === 0;
 }
 
 // ...balls.
@@ -28,6 +28,24 @@ function die_avg(number, size) {
         return 0;
     }
     return (number * (size + 1)) / 2;
+}
+
+function copy_clipboard_fallback(data) {
+    let $tmp = $("textarea");
+    $("body").append($tmp);
+    $tmp.val(data).select();
+    document.execCommand("copy");
+    $tmp.remove();
+}
+
+function copy_clipboard(data) {
+    if (!navigator.clipboard) {
+        copy_clipboard_fallback(data)
+        return false;
+    }
+    navigator.clipboard.writeText(data).then(function() {}, function(err) {
+        copy_clipboard_fallback(data)
+    });
 }
 
 // from https://stackoverflow.com/questions/14480345/how-to-get-the-nth-occurrence-in-a-string

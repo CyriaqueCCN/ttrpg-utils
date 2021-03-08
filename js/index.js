@@ -1,8 +1,20 @@
-function buildFromParams() {
-    // TODO : export/import attack scenarios (JSON encoded ?)
+function build_from_url() {
+    let obj = {};
+    let url_len = window.location.search.length;
+    if (url_len > 1) {
+        try {
+            let query = window.location.search.substring(1, url_len);
+            obj = JSON.parse(atob(query));
+        } catch(e) {
+            console.log(e);
+            obj = {};
+        }
+    }
+    return new App(obj);
 }
 
 // Init
+var app;
 $(document).ready(function(){
-    app = new App({});
+    app = build_from_url();
 });

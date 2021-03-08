@@ -22,7 +22,18 @@ class Attack {
         this.critspec_flatfoot = params.critspec_flatfoot || false;
         this.critspec_damage = to_int(params.critspec_damage) || 0;
         this.generate();
+        if (!is_empty(params)) {
+            this.build_from(params);
+        }
         this.bind_inputs();
+    }
+
+    build_from(p) {
+        for (let i in p) {
+            if (this[i] !== undefined) {
+                $("#" + this.id).find("input[name='atk_" + i + "']").val(p[i]);
+            }
+        }
     }
 
     bind_inputs() {
@@ -65,7 +76,7 @@ class Attack {
             this.enchants_damage_bonus  ||
             (this.noncrit_die_number && this.noncrit_die_size)  ||
             this.noncrit_damage_bonus;
-        return (this.id && this.name && this.hit_bonus && properties_ok);
+        return (this.id && this.name && properties_ok);
     }
 
     dpr(m) {
@@ -101,7 +112,21 @@ class Turn {
         this.name = params.name || null;
         this.attacks = params.attacks || [];
         this.generate();
+        if (!is_empty(params)) {
+            this.build_from(params);
+        }
         this.bind_inputs();
+    }
+
+    build_from(p) {
+        if (p.name !== undefined) {
+            $("#" + this.id).find("input[name='turn_name']").val(p.name);
+        }
+        if ((p.attacks !== undefined) && (p.attacks instanceof Array)) {
+            for (let a of p.attacks) {
+                this.link_attack("", a, false);
+            }
+        }
     }
 
     bind_inputs() {
@@ -127,41 +152,44 @@ class Turn {
         });
 
         $('#' + this.id).on("click", ".turn-atk-add", this, function(e) {
-            e.data.link_attack($(this).closest(".turn-atk-infos").find('.turn-atk-add-name'));
+            let add_name = $(this).closest(".turn-atk-infos").find('.turn-atk-add-name').val().toLowerCase().trim();
+            e.data.link_attack(add_name, 0, true);
             return false;
         });
     }
 
-    link_attack($ev) {;
-        let nm = $ev.val().toLowerCase().trim();
+    link_attack(a_nm, a_id, cmp_name) {
         let wep_name = "__UNKNOWN__";
         let wep_id = -1;
         $('.atk').each(function() {
             let wep_n = $(this).find('.atk-name').val().toLowerCase().trim();
-            if(wep_n === nm) {
+            let wep_i = $(this).attr("id");
+            if((cmp_name && (wep_n === a_nm)) || (a_id === wep_i)) {
                 wep_name = wep_n;
-                wep_id = $(this).attr('id');
+                wep_id = wep_i;
                 return false; // equivalent to break in a jQuery each
             }
         });
         if (wep_id === -1 || wep_name === "__UNKNOWN__") {
             if (DEBUG) {
-                console.log("No turn-atk found for name " + nm);
+                console.log("No turn-atk found for name " + a_nm + " or id " + a_id);
             }
             return false;
         }
         // update attacks
         let occur = this.attacks.filter(value => value === wep_id).length + 1;
-        this.attacks.push(wep_id);
+        if (cmp_name) {
+            this.attacks.push(wep_id);
+        }
         // populate DOM
         let $wep = $($('#turn-atk-tmpl').html());
-        $ev.closest('.turn').find('.turn-atk-list').append($wep);
-        $wep.attr('data-wep-id', wep_id.toString());
+        $('#' + this.id).find('.turn-atk-list').append($wep);
+        $wep.attr('data-wep-id', wep_id);
         $wep.attr('data-wep-occur', occur);
-        let $target = $('#' + wep_id.toString()).find('.atk-name');
+        let $target = $('#' + wep_id).find('.atk-name');
         $wep.find('.turn-atk-name').text($target.val());
         $wep.attr("id", unique_id());
-        $ev.val("");
+        $('#' + this.id).find('.turn-atk-add-name').val("");
     }
 
     generate() {
@@ -212,7 +240,25 @@ class Monster {
         this.vulns = params.vulns || {};
         this.resists = params.resists || {};
         this.immuns = params.immuns || {};
+        this.fort = to_int(params.fort) || 0;
+        this.will = to_int(params.will) || 0;
+        this.ref = to_int(params.ref) || 0;
+        if (!is_empty(params)) {
+            this.build_from(params);
+        }
         this.bind_inputs();
+    }
+
+    build_from(p) {
+        for (let i in p) {
+            if (i === "ac" || i === "fort" || i === "will" || i === "ref" || i === "name") {
+                $(document).find("input[name='monster_" + i + "']").val(p[i]);
+            } else if (i !== "id" && p[i] instanceof Object) {
+                $(document).find("input[name='monster_" + i + "']").val(
+                    JSON.stringify(p[i]).replace(/\{|\}|\"/g, "").replace(/:/g, " ")
+                );
+            }
+        }
     }
 
     bind_inputs() {
@@ -224,7 +270,7 @@ class Monster {
             if (attr === undefined || !Reflect.has(e.data, attr)) {
                 return false;
             }
-            else if (attr === "ac") {
+            else if (attr === "ac" || attr === "fort" || attr === "will" || attr === "ref") {
                 e.data[attr] = to_int($(this).val());
             } else if (attr === "name") {
                 e.data[attr] = $(this).val();
@@ -271,10 +317,20 @@ class Result {
 
 class App {
     constructor(params) {
-        this.monster = params.monster || new Monster({});
-        this.result = params.result || new Result({});
-        this.attacks = params.attacks || {};
-        this.turns = params.turns || {};
+        this.monster = new Monster(params.monster || {});
+        this.result = new Result(params.result || {});
+        this.attacks = {};
+        this.turns = {};
+        if (!is_empty(params.attacks) && (params.attacks instanceof Object)) {
+            for (let atk in params.attacks) {
+                this.create_attack(params.attacks[atk]);
+            }
+        }
+        if (!is_empty(params.turns) && (params.turns instanceof Object)) {
+            for (let turn in params.turns) {
+                this.create_turn(params.turns[turn]);
+            }
+        }
         this.bind_inputs();
     }
 
@@ -282,11 +338,11 @@ class App {
     bind_inputs() {
         // create attack
         $("#create-attack").on("click", null, this, function(e) {
-            e.data.create_attack();
+            e.data.create_attack({});
         });
         // create turn
         $("#create-turn").on("click", null, this, function(e) {
-            e.data.create_turn();
+            e.data.create_turn({});
         });
         // delete all turns
         $("#clear-turns").on("click", null, this, function(e) {
@@ -342,15 +398,24 @@ class App {
             $("#clear-results").trigger("click");
             e.data.result.compute(e.data);
         });
+
+        // save page state on url
+        $("#save").on("click", null, this, function(e) {
+            let url = (window.location.protocol ? window.location.protocol : "")
+                + (window.location.host ? window.location.host : "")
+                + (window.location.pathname ? window.location.pathname : "/")
+                + "?" + btoa((JSON.stringify(e.data)));
+            copy_clipboard(url);
+        });
     }
 
-    create_turn() {
-        let turn = new Turn({});
-        this.turns[turn.id] = turn;
+    create_turn(t) {
+        let nturn = new Turn(t);
+        this.turns[nturn.id] = nturn;
     }
 
-    create_attack() {
-        let atk = new Attack({});
-        this.attacks[atk.id] = atk;
+    create_attack(a) {
+        let natk = new Attack(a);
+        this.attacks[natk.id] = natk;
     }
 }

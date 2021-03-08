@@ -20,9 +20,18 @@
         <section class="hero is-info welcome is-small">
             <div class="hero-body">
                 <div class="container">
+                    <button class="button is-pulled-right" id="save">
+                        <span class="icon">
+                            <i class="fas fa-save"></i>
+                        </span>
+                        <span>
+                            Save to clipboard
+                        </span>
+                    </button>
                     <h1 class="title">
                         Pathfinder 2e - Attack Calculator
                     </h1>
+                    <div class="is-clearfix"></div>
                 </div>
             </div>
         </section>
@@ -46,22 +55,37 @@
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text" disabled placeholder="Debuffs (not supported yet)" name="monster_debuffs">
+                            <input class="input is-info monster-info" type="text"  placeholder="Debuffs (not supported yet)" name="monster_debuffs">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text" disabled placeholder="Vulnerabilites (not supported yet)" name="monster_vulns">
+                            <input class="input is-info monster-info" type="text"  placeholder="Vulnerabilites (not supported yet)" name="monster_vulns">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text" disabled placeholder="Resistances (not supported yet)" name="monster_resists">
+                            <input class="input is-info monster-info" type="text"  placeholder="Resistances (not supported yet)" name="monster_resists">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text" disabled placeholder="Immunities (not supported yet)" name="monster_immuns">
+                            <input class="input is-info monster-info" type="text"  placeholder="Immunities (not supported yet)" name="monster_immuns">
+                        </div>
+                    </div>
+                    <div class="column is-hidden">
+                        <div class="field">
+                            <input class="input is-info monster-info"  type="text"  placeholder="Fort Save (not supported yet)" name="monster_fort">
+                        </div>
+                    </div>
+                    <div class="column is-hidden">
+                        <div class="field">
+                            <input class="input is-info monster-info"  type="text"  placeholder="Ref Save (not supported yet)" name="monster_ref">
+                        </div>
+                    </div>
+                    <div class="column is-hidden">
+                        <div class="field">
+                            <input class="input is-info monster-info"  type="text"  placeholder="Will Save (not supported yet)" name="monster_will">
                         </div>
                     </div>
                 </div>
@@ -347,7 +371,7 @@
                     <div class="field-body">
                         <div class="field is-grouped">
                             <p class="control is-expanded">
-                                <input class="input turn-name" type="text" placeholder="Turn Name" name="turn-name">
+                                <input class="input turn-name" type="text" placeholder="Turn Name" name="turn_name">
                             </p>
                         </div>
                     </div>
@@ -360,7 +384,7 @@
                         <div class="field-body">
                             <div class="field has-addons turn-atk-infos">
                                 <div class="control is-expanded">
-                                    <input class="input turn-atk-add-name" type="text" placeholder="Attack Name" name="turn-atk-add-name">
+                                    <input class="input turn-atk-add-name" type="text" placeholder="Attack Name" name="turn_atk-add-name">
                                 </div>
                                 <div class="control">
                                     <a class="button is-primary turn-atk-add">Add</a>

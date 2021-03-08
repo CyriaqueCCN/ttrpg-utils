@@ -26,6 +26,7 @@ I might expand this one for all classes to use (spells, buffs...) but the sheer 
 - [x] Critical specialisation damage (flat bonus only for now. As a rule of thumb any persistent damage die can be added as their die size with roughly the same damage accuracy)
 
 ### To do
+- [x] Save page state in an URL / Build page from an URL to easily share/save scenarios
 - [ ] Update design and color code to match Pathfinder aesthetics
 - [ ] Enhance the classes structure for ease of maintainability. A JS framework would be a good idea, but I don't have the time to learn one at the moment.
 - [ ] Create a number form control with more explicit errors
@@ -36,13 +37,14 @@ I might expand this one for all classes to use (spells, buffs...) but the sheer 
 - [ ] Add support for nondamage enchants such as keen, grievous or the various debuffs
 - [ ] Solve the MAP problem, either by automating its calculation (but that would require more inputs from the user to give their current MAP) or at least add the possibility to clone an attack to make the setup less cumbersome
 - [ ] Add a "crit precision" field for precision damage that only procs on a crit, as some Rogue feats give. For now, it's safe to put them in the crit spec damage field
-- [ ] Save page state in an URL / Build page from an URL to easily share/save scenarios
 - [ ] Take into account the potential debuffs as they go. Example : Axes flat-foot the target on a crit, which increases the next attack(s) DPR. A way to go would be to build an attack tree instead of simply multiplying and adding attacks DPR
 - [ ] Add resources (such as [the median AC table](https://paizo.com/threads/rzs42o1o?Bestiary-Stats-Spreadsheet)) for reference
 - [ ] Import monster stats from an external link (such as [Archive of Nethys](https://2e.aonprd.com/) or [d20pfsrd](https://pf2.d20pfsrd.com/))
 - [ ] Import weapon stats from an external link (such as [Archive of Nethys](https://2e.aonprd.com/) or [d20pfsrd](https://pf2.d20pfsrd.com/))
 - [ ] Add the possible debuffs to the result tab (with a probability to apply them ?)
 - [ ] Change the cumbersome "type the name" attack-turn linkage to something more intuitive like a drag'n'drop
+- [ ] Return better infos than DPR : variance, standard deviation, graphs, chance to hit/crit...
+- [ ] Change "Attack" to "Action" -> support spells and other various actions (buffs, debuffs, maneuvers, consumables, heal...)
 
 Don't hesitate to submit any improvement you might want, or any use case I might've missed.
 
