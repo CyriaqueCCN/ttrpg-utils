@@ -27,15 +27,15 @@ I might expand this one for all classes to use (spells, buffs...) but the sheer 
 
 ### To do
 - [x] Save page state in an URL / Build page from an URL to easily share/save scenarios
+- [x] Solve the MAP problem, either by automating its calculation (but that would require more inputs from the user to give their current MAP) or at least add the possibility to clone an attack to make the setup less cumbersome (duplicate only for now)
+- [x] Enhance the classes structure for ease of maintainability. A JS framework would be a good idea, but I don't have the time to learn one at the moment. Kinda OK.
+- [x] Create a number form control with input-error highlighting
 - [ ] Update design and color code to match Pathfinder aesthetics
-- [ ] Enhance the classes structure for ease of maintainability. A JS framework would be a good idea, but I don't have the time to learn one at the moment.
-- [ ] Create a number form control with more explicit errors
 - [ ] Monster immunities, vulnerabilities and resistances
 - [ ] Support damage types, others weapon traits and weapon groups
 - [ ] Take into account PF2 crit system instead of the simplified version "crit=autohit" (irrelevant for near-PC-level monsters)
 - [ ] Refine the enchantments section (separate the damage types if there is more than one damaging enchantment)
 - [ ] Add support for nondamage enchants such as keen, grievous or the various debuffs
-- [ ] Solve the MAP problem, either by automating its calculation (but that would require more inputs from the user to give their current MAP) or at least add the possibility to clone an attack to make the setup less cumbersome
 - [ ] Add a "crit precision" field for precision damage that only procs on a crit, as some Rogue feats give. For now, it's safe to put them in the crit spec damage field
 - [ ] Take into account the potential debuffs as they go. Example : Axes flat-foot the target on a crit, which increases the next attack(s) DPR. A way to go would be to build an attack tree instead of simply multiplying and adding attacks DPR
 - [ ] Add resources (such as [the median AC table](https://paizo.com/threads/rzs42o1o?Bestiary-Stats-Spreadsheet)) for reference

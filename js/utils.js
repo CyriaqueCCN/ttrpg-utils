@@ -11,10 +11,15 @@ function is_empty(obj) {
     return obj === undefined || obj === null || Object.keys(obj).length === 0;
 }
 
-// ...balls.
+// ...balls...
 function to_int(num) {
     let n = parseInt(num, 10);
     return isNaN(n) ? 0 : n;
+}
+
+// ...hard
+function deep_copy(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 
 // good enough for our use

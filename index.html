@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="img/pf2action.png">
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/fa/all.css">
+    <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.2/css/bulma.min.css">-->
     <link rel="stylesheet" type="text/css" href="css/bulma/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="css/bulma/divider.css">
     <link rel="stylesheet" type="text/css" href="css/index.css">
@@ -16,7 +17,11 @@
 </head>
 <body class="site">
     <header class="site-header">
-        <div class="container header">
+        <div class="notification is-warning is-pulled-left is-hidden">
+            <button class="delete del-notif"></button>
+            <p class="text-notif"></p>
+        </div>
+        <div class="clearfix container header">
         <section class="hero is-info welcome is-small">
             <div class="hero-body">
                 <div class="container">
@@ -45,47 +50,47 @@
                     <div class="column is-2"><h4 class="title is-4">Monster Stats</h4></div>
                     <div class="column is-1">
                         <div class="field">
-                            <input class="input is-info monster-info" type="number" placeholder="AC" name="monster_ac">
+                                <input class="input monster-info" required type="number" placeholder="AC" name="monster_ac">
                         </div>
                     </div>
                     <div class="column is-hidden" hidden>
                         <div class="field">
-                            <input class="input is-info monster-info" type="text" placeholder="Name" name="monster_name">
+                            <input class="input monster-info" type="text" placeholder="Name" name="monster_name">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text"  placeholder="Debuffs (not supported yet)" name="monster_debuffs">
+                            <input class="input monster-info" type="text"  placeholder="Debuffs (not supported yet)" name="monster_debuffs">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text"  placeholder="Vulnerabilites (not supported yet)" name="monster_vulns">
+                            <input class="input monster-info" type="text"  placeholder="Vulnerabilites (not supported yet)" name="monster_vulns">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text"  placeholder="Resistances (not supported yet)" name="monster_resists">
+                            <input class="input monster-info" type="text"  placeholder="Resistances (not supported yet)" name="monster_resists">
                         </div>
                     </div>
                     <div class="column">
                         <div class="field">
-                            <input class="input is-info monster-info" type="text"  placeholder="Immunities (not supported yet)" name="monster_immuns">
+                            <input class="input monster-info" type="text"  placeholder="Immunities (not supported yet)" name="monster_immuns">
                         </div>
                     </div>
                     <div class="column is-hidden">
                         <div class="field">
-                            <input class="input is-info monster-info"  type="text"  placeholder="Fort Save (not supported yet)" name="monster_fort">
+                            <input class="input  monster-info"  type="text"  placeholder="Fort Save (not supported yet)" name="monster_fort">
                         </div>
                     </div>
                     <div class="column is-hidden">
                         <div class="field">
-                            <input class="input is-info monster-info"  type="text"  placeholder="Ref Save (not supported yet)" name="monster_ref">
+                            <input class="input monster-info"  type="text"  placeholder="Ref Save (not supported yet)" name="monster_ref">
                         </div>
                     </div>
                     <div class="column is-hidden">
                         <div class="field">
-                            <input class="input is-info monster-info"  type="text"  placeholder="Will Save (not supported yet)" name="monster_will">
+                            <input class="input monster-info"  type="text"  placeholder="Will Save (not supported yet)" name="monster_will">
                         </div>
                     </div>
                 </div>
@@ -154,15 +159,16 @@
             </div>
         </section>
         <section class="columns">
-            <div class="column is-6 atk-parent" id="atk-div">
+            <div class="column atk-parent" id="atk-div">
                 <div class="columns">
                     <div class="column is-12">
                         <p class="title is-12">Attacks</p>
                     </div>
                 </div>
             </div>
-            <div class="column is-1 spacing"></div>
-            <div class="column is-5 turn-parent" id="turn-div">
+            <div class="column divider is-vertical is-narrow is-hidden-mobile">|
+            </div>
+            <div class="column turn-parent" id="turn-div">
                 <div class="columns">
                     <div class="column is-12">
                         <p class="title is-12">Turns</p>
@@ -170,40 +176,49 @@
                 </div>
             </div>
         </section>
-        <div class="divider"> X </div>
+        <div class="divider">+</div>
         <section class="section pt-0">
             <p class="title is-3">Results</p>
-            <div class="columns" id="res-div">
+            <div class="columns is-multiline" id="res-div">
             </div>
         </section>
     </div>
    <!-- Templates -->
     <template id="atk-tmpl">
         <div class="columns dpd-parent atk has-background-white-bis">
-            <div class="column is-2">
-                <button class="dpd-button button is-primary">
+            <div class="column is-1">
+                <button class="dpd-button button is-primary mb-1">
                     <span class="icon is-small">
                         <i class="fas fa-angle-up"></i>
                     </span>
                 </button>
-                <button class="del-atk button is-danger">
-                    <span class="icon is-small" title="Delete this attack">
-                        <i class="fas fa-times"></i>
-                    </span>
-                </button>
+                <div class="but-dpd">
+                    <button class="dup-atk button is-info mb-1">
+                        <span class="icon is-small" title="Duplicate this attack">
+                            <i class="fas fa-clone"></i>
+                        </span>
+                    </button>
+                    <button class="del-atk button is-danger mb-1">
+                        <span class="icon is-small" title="Delete this attack">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </button>
+                </div>
             </div>
-            <div class="column is-10">
+            <div class="column">
                 <div class="field is-horizontal">
-                    <div class="field-label is-normal">
+                    <div class="field-label">
                         <label class="label">Name</label>
                     </div>
                     <div class="field-body">
-                        <div class="field is-grouped">
+                        <div class="field">
                             <p class="control is-expanded">
-                                <input class="input atk-name atk-info" type="text" placeholder="Weapon Name" name="atk_name">
+                                <input class="input atk-name atk-info" type="text" required placeholder="Weapon Name" name="atk_name">
                             </p>
+                        </div>
+                        <div class="field is-narrow">
                             <p class="control">
-                                <input class="input atk-hit-bonus atk-info" type="number" placeholder="Hit bonus" name="atk_hit_bonus">
+                                <input class="input atk-hit-bonus atk-info" type="number" placeholder="To hit" name="atk_hit_bonus">
                             </p>
                         </div>
                     </div>
@@ -350,20 +365,27 @@
         </div>
     </template>
     <template id="turn-tmpl">
-        <div class="columns dpd-parent turn has-background-white-bis">
-            <div class="column is-2">
-                <button class="dpd-button button is-primary">
+        <div class="columns dpd-parent turn has-background-white-bis is-4">
+            <div class="column is-1">
+                <button class="dpd-button button is-primary mb-1">
                     <span class="icon is-small">
                         <i class="fas fa-angle-up"></i>
                     </span>
                 </button>
-                <button class="del-turn button is-danger">
-                    <span class="icon is-small" title="Delete this turn">
-                        <i class="fas fa-times"></i>
-                    </span>
-                </button>
+                <div class="but-dpd">
+                    <button class="dup-turn button is-info mb-1">
+                        <span class="icon is-small" title="Duplicate this turn">
+                            <i class="fas fa-clone"></i>
+                        </span>
+                    </button>
+                    <button class="del-turn button is-danger mb-1">
+                        <span class="icon is-small" title="Delete this turn">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </button>
+                </div>
             </div>
-            <div class="column is-10">
+            <div class="column is-11">
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
                         <label class="label">Name</label>
@@ -371,7 +393,7 @@
                     <div class="field-body">
                         <div class="field is-grouped">
                             <p class="control is-expanded">
-                                <input class="input turn-name" type="text" placeholder="Turn Name" name="turn_name">
+                                <input class="input turn-name" type="text" required placeholder="Turn Name" name="turn_name">
                             </p>
                         </div>
                     </div>
@@ -404,7 +426,7 @@
             <div class="field-body">
                 <div class="field is-expanded">
                     <div class="buttons has-addons fw-buttons">
-                        <a class="button is-static turn-atk-name"></a>
+                        <a class="button is-static turn-atk-name"><span class="turn-atk-name-wrapper"></span></a>
                         <a class="button is-danger turn-atk-remove">Remove</a>
                     </div>
                 </div>
@@ -414,12 +436,12 @@
     <template id="res-tmpl">
         <div class="column res-col">
             <div class="card">
-                <div class="card-header">
-                    <p class="card-header-title res-name">
-                    </p>
+                <div class="card-header has-text-centered">
+                    <p class="card-header-title is-centered res-name"></p>
                 </div>
-                <div class="card-content res-content">
-                    <div class="columns">
+                <div class="card-content res-content"></div>
+                <div class="card-footer">
+                    <div class="card-footer-item columns res-total-col mt-0 mb-0 pb-1 pt-1">
                         <div class="column">
                             <p><strong>Total</strong></p>
                         </div>
@@ -432,12 +454,12 @@
         </div>
     </template>
     <template id="card-tmpl">
-        <div class="columns att-col">
+        <div class="columns is-multiline att-col">
             <div class="column">
-                <p class="att-name"></p>
+                <p class="res-att-name"></p>
             </div>
             <div class="column">
-                <p class="att-dpr"></p>
+                <p class="res-att-dpr"></p>
             </div>
         </div>
     </template>

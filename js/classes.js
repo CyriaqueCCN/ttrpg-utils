@@ -221,9 +221,9 @@ class Turn {
             }
             let $att = $($('#card-tmpl').html());
             let dpr = app.attacks[a_id].dpr(app.monster);
-            $att.find('.att-name').html(app.attacks[a_id].name);
-            $att.find('.att-dpr').html(dpr);
-            $res.find('.res-content').prepend($att);
+            $att.find('.res-att-name').html(app.attacks[a_id].name);
+            $att.find('.res-att-dpr').html(dpr);
+            $res.find('.res-content').append($att);
             total_dpr += dpr;
         }
         $res.find('.res-total').text(round2(total_dpr));
@@ -384,13 +384,36 @@ class App {
         // dropdown elements
         $(document).on("click", '.dpd-button', function() {
             let $sib = $(this).closest('.dpd-parent').find(".dpd");
+            let $but = $(this).closest('.dpd-parent').find(".but-dpd")
             if ($sib.is(':visible')) {
-                $sib.slideUp();
+                $sib.slideUp("fast");
+                $but.hide();
                 $(this).find("[data-fa-i2svg]").addClass("fa-angle-down").removeClass("fa-angle-up");
             } else {
-                $sib.slideDown();
+                $sib.slideDown("fast");
+                $but.show();
                 $(this).find("[data-fa-i2svg]").removeClass("fa-angle-down").addClass("fa-angle-up");
             }
+        });
+
+        // deepclone the atk object, insert it and keep it on the app list
+        $(document).on("click", ".dup-atk", this, function(e) {
+            let a_id = $(this).closest(".atk").attr("id");
+            let new_info = deep_copy(e.data.attacks[a_id]);
+            new_info.id = unique_id();
+            new_info.name += " Copy";
+            let new_atk = new Attack(new_info);
+            e.data.attacks[new_atk.id] = new_atk;
+        });
+
+        // deepclone the turn object, insert it and keep it on the app list
+        $(document).on("click", ".dup-turn", this, function(e) {
+            let t_id = $(this).closest(".turn").attr("id");
+            let new_info = deep_copy(e.data.turns[t_id]);
+            new_info.id = unique_id();
+            new_info.name += " Copy";
+            let new_turn = new Turn(new_info);
+            e.data.turns[new_turn.id] = new_turn;
         });
 
         // launch simulation

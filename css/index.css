@@ -12,6 +12,18 @@ input[type=number] {
     -moz-appearance:textfield; 
 } 
 
+/* Form control */
+
+input[type=number]:invalid {
+    border: 1px solid hsl(348, 86%, 61%);
+    z-index: 100;
+}
+
+input[type=text]:invalid {
+    border: 1px solid hsl(348, 86%, 61%);
+    z-index: 100;
+}
+
  /* Bulma overrides */
 
 input {
@@ -43,4 +55,9 @@ body {
 
 .site-content {
     flex: 1 0 0;
+}
+
+.divider {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
