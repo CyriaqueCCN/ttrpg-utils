@@ -17,5 +17,7 @@ function build_from_url() {
 var app;
 $(document).ready(function(){
     app = build_from_url();
-    $("#simulate").trigger("click");
+    if (!is_empty(app.turns) && !is_empty(app.actions)) {
+        $("#simulate").trigger("click");
+    }
 });

@@ -1,9 +1,63 @@
 // TODO : tidy up constructors
-class Attack {
+//const ActionCost = ["one", "two", "three", "reaction", "free", "full", "other"];
+//const ActionType = ["Spell", "Attack", "Buff", "Debuff", "Other"];
+
+class Action {
+    constructor(a_id, a_name, a_cost, a_type) {
+        this.id = a_id || unique_id();
+        this.name = a_name || null;
+        this.cost = a_cost || "one";
+        this.type = a_type || "Other";
+    }
+}
+
+class Spell extends Action {
+    // shim
+    constructor (params) {
+        super(params.id, params.name, params.cost, this.constructor.name);
+        this.damage_die_number = to_int(params.damage_die_number) || 0;
+        this.damage_die_size = to_int(params.damage_die_size) || 0;
+        this.generate();
+        if (!is_empty(params)) {
+            this.build_from(params);
+        }
+        this.bind_inputs();
+    }
+
+    dpr() {
+        // testing purposes
+        return die_avg(this.damage_die_number, this.damage_die_size);
+    }
+
+    generate() {
+        return true;
+    }
+
+    build_from(p) {
+        return p;
+    }
+
+    is_valid() {
+        return true;
+    }
+
+    bind_inputs() {
+        return true;
+    }
+}
+
+class Buff extends Action {
+    // shim
+}
+
+class Debuff extends Action {
+    // shim
+}
+
+class Attack extends Action {
     constructor(params) {
         // TODO add damage typing and enchants distinction
-        this.id = params.id || unique_id();
-        this.name = params.name || null;
+        super(params.id, params.name, params.cost, params.action_type);
         this.hit_bonus = to_int(params.hit_bonus) || 0;
         this.damage_bonus = to_int(params.damage_bonus) || 0;
         this.damage_die_number = to_int(params.damage_die_number) || 0;
@@ -31,15 +85,15 @@ class Attack {
     build_from(p) {
         for (let i in p) {
             if (this[i] !== undefined) {
-                $("#" + this.id).find("input[name='atk_" + i + "']").val(p[i]);
+                $("#" + this.id).find("input[name='act_" + i + "']").val(p[i]);
             }
         }
     }
 
     bind_inputs() {
         // dynamically modify object attributes
-        $('#' + this.id).on("input", ".atk-info", this, function(e) {
-            let attr = $(this).attr("name").replace("atk_", "");
+        $('#' + this.id).on("input", ".act-info", this, function(e) {
+            let attr = $(this).attr("name").replace("act_", "");
             if (attr === undefined || !Reflect.has(e.data, attr)) {
                 return false;
             }
@@ -53,18 +107,18 @@ class Attack {
     }
 
     generate() {
-        let $atk = $($('#atk-tmpl').html());
-        $atk.attr("id", this.id);
-        // bind to turn referencing attacks
-        $atk.on('input', function() {
+        let $act = $($('#act-tmpl').html());
+        $act.attr("id", this.id);
+        // bind to turn referencing actions
+        $act.on('input', function() {
             let $a = $(this);
-            $('.turn-atk-item').each(function(){
+            $('.turn-act-item').each(function(){
                 if ($(this).attr('data-wep-id') === $a.attr('id')) {
-                    $(this).find('.turn-atk-name').text($a.find('.atk-name').val());
+                    $(this).find('.turn-act-name').text($a.find('.act-name').val());
                 }
             });
         });
-        $('#atk-div').append($atk);
+        $('#act-div').append($act);
     }
 
     is_valid() {
@@ -80,7 +134,7 @@ class Attack {
     }
 
     dpr(m) {
-        // TODO build attack tree instead of naive multiplication
+        // TODO build action tree instead of naive multiplication
         let ac = m.ac;
         let crit_chance = Math.min(0.95, Math.max(0.05, (11 + this.hit_bonus - ac) / 20));
         let hit_chance = Math.min(0.95, Math.max(0.05, (21 + this.hit_bonus - ac) / 20)) - crit_chance;
@@ -95,7 +149,7 @@ class Attack {
             + die_avg(deadly_die(this.damage_die_number), this.deadly) + die_avg(1, this.fatal) + this.critspec_damage
             + die_avg(this.noncrit_die_number, this.noncrit_die_size);
         if (DEBUG && DEBUG_DPR) {
-            console.log("attack ", this);
+            console.log("action ", this);
             console.log("hit chance ", hit_chance);
             console.log("crit chance ", crit_chance);
             console.log("hit dpr ", hit_dpr);
@@ -106,11 +160,14 @@ class Attack {
     }
 }
 
+// mapping
+const action_mapping = {"Attack" : Attack, "Spell" : Spell, "Buff" : Buff, "Debuff" : Debuff};
+
 class Turn {
     constructor(params) {
         this.id = params.id || unique_id();
         this.name = params.name || null;
-        this.attacks = params.attacks || [];
+        this.actions = params.actions || [];
         this.generate();
         if (!is_empty(params)) {
             this.build_from(params);
@@ -122,22 +179,22 @@ class Turn {
         if (p.name !== undefined) {
             $("#" + this.id).find("input[name='turn_name']").val(p.name);
         }
-        if ((p.attacks !== undefined) && (p.attacks instanceof Array)) {
-            for (let a of p.attacks) {
-                this.link_attack("", a, false);
+        if ((p.actions !== undefined) && (p.actions instanceof Array)) {
+            for (let a of p.actions) {
+                this.link_action("", a, false);
             }
         }
     }
 
     bind_inputs() {
-        // kind of a problem here : we only want to remove THAT occurrence of the turn-atk
+        // kind of a problem here : we only want to remove THAT occurrence of the turn-act
         // solution : keep how many occurrences of it we have
-        $('#' + this.id).on("click", ".turn-atk-remove", this, function(e) {
-            let $rem = $(this).closest('.turn-atk-item');
+        $('#' + this.id).on("click", ".turn-act-remove", this, function(e) {
+            let $rem = $(this).closest('.turn-act-item');
             let a_id = $rem.attr('data-wep-id');
             let a_oc = to_int($rem.attr("data-wep-occur"));
-            e.data.attacks.splice(e.data.attacks.nth_index(a_id, to_int(a_oc)), 1);
-            $rem.siblings(".turn-atk-item").each(function() {
+            e.data.actions.splice(e.data.actions.nth_index(a_id, to_int(a_oc)), 1);
+            $rem.siblings(".turn-act-item").each(function() {
                 let t_oc = to_int($(this).attr("data-wep-occur"))
                 if ($(this).attr("data-wep-id") === a_id && t_oc > a_oc) {
                     $(this).attr("data-wep-occur", t_oc - 1);
@@ -151,18 +208,18 @@ class Turn {
             e.data.name = $(this).val();
         });
 
-        $('#' + this.id).on("click", ".turn-atk-add", this, function(e) {
-            let add_name = $(this).closest(".turn-atk-infos").find('.turn-atk-add-name').val().toLowerCase().trim();
-            e.data.link_attack(add_name, 0, true);
+        $('#' + this.id).on("click", ".turn-act-add", this, function(e) {
+            let add_name = $(this).closest(".turn-act-infos").find('.turn-act-add-name').val().toLowerCase().trim();
+            e.data.link_action(add_name, 0, true);
             return false;
         });
     }
 
-    link_attack(a_nm, a_id, cmp_name) {
+    link_action(a_nm, a_id, cmp_name) {
         let wep_name = "__UNKNOWN__";
         let wep_id = -1;
-        $('.atk').each(function() {
-            let wep_n = $(this).find('.atk-name').val().toLowerCase().trim();
+        $('.act').each(function() {
+            let wep_n = $(this).find('.act-name').val().toLowerCase().trim();
             let wep_i = $(this).attr("id");
             if((cmp_name && (wep_n === a_nm)) || (a_id === wep_i)) {
                 wep_name = wep_n;
@@ -172,24 +229,24 @@ class Turn {
         });
         if (wep_id === -1 || wep_name === "__UNKNOWN__") {
             if (DEBUG) {
-                console.log("No turn-atk found for name " + a_nm + " or id " + a_id);
+                console.log("No turn-act found for name " + a_nm + " or id " + a_id);
             }
             return false;
         }
-        // update attacks
-        let occur = this.attacks.filter(value => value === wep_id).length + 1;
+        // update actions
+        let occur = this.actions.filter(value => value === wep_id).length + 1;
         if (cmp_name) {
-            this.attacks.push(wep_id);
+            this.actions.push(wep_id);
         }
         // populate DOM
-        let $wep = $($('#turn-atk-tmpl').html());
-        $('#' + this.id).find('.turn-atk-list').append($wep);
+        let $wep = $($('#turn-act-tmpl').html());
+        $('#' + this.id).find('.turn-act-list').append($wep);
         $wep.attr('data-wep-id', wep_id);
         $wep.attr('data-wep-occur', occur);
-        let $target = $('#' + wep_id).find('.atk-name');
-        $wep.find('.turn-atk-name').text($target.val());
+        let $target = $('#' + wep_id).find('.act-name');
+        $wep.find('.turn-act-name').text($target.val());
         $wep.attr("id", unique_id());
-        $('#' + this.id).find('.turn-atk-add-name').val("");
+        $('#' + this.id).find('.turn-act-add-name').val("");
     }
 
     generate() {
@@ -199,7 +256,7 @@ class Turn {
     }
 
     is_valid() {
-        return this.id && this.name && !is_empty(this.attacks);
+        return this.id && this.name && !is_empty(this.actions);
     }
 
     compute(app) {
@@ -212,16 +269,16 @@ class Turn {
         let $res = $($('#res-tmpl').html());
         $res.find('.res-name').text(this.name);
         let total_dpr = 0;
-        for (let a_id of this.attacks) {
-            if (!app.attacks[a_id].is_valid()) {
+        for (let a_id of this.actions) {
+            if (!app.actions[a_id].is_valid()) {
                 if (DEBUG) {
-                    console.log("Invalid attack : ", app.attacks[a_id]);
+                    console.log("Invalid action : ", app.actions[a_id]);
                 }
                 continue;
             }
             let $att = $($('#card-tmpl').html());
-            let dpr = app.attacks[a_id].dpr(app.monster);
-            $att.find('.res-att-name').html(app.attacks[a_id].name);
+            let dpr = app.actions[a_id].dpr(app.monster);
+            $att.find('.res-att-name').html(app.actions[a_id].name);
             $att.find('.res-att-dpr').html(dpr);
             $res.find('.res-content').append($att);
             total_dpr += dpr;
@@ -319,11 +376,11 @@ class App {
     constructor(params) {
         this.monster = new Monster(params.monster || {});
         this.result = new Result(params.result || {});
-        this.attacks = {};
+        this.actions = {};
         this.turns = {};
-        if (!is_empty(params.attacks) && (params.attacks instanceof Object)) {
-            for (let atk in params.attacks) {
-                this.create_attack(params.attacks[atk]);
+        if (!is_empty(params.actions) && (params.actions instanceof Object)) {
+            for (let act in params.actions) {
+                this.create_action(params.actions[act].type, params.actions[act]);
             }
         }
         if (!is_empty(params.turns) && (params.turns instanceof Object)) {
@@ -336,9 +393,10 @@ class App {
 
     // some of them should be in their own classes but I need the App object to update it, and I won't create a reference to it in its own children.
     bind_inputs() {
-        // create attack
-        $("#create-attack").on("click", null, this, function(e) {
-            e.data.create_attack({});
+        // create action
+        $(".create-action-btn").on("click", null, this, function(e) {
+            let act = $(this).attr("data-action-type");
+            e.data.create_action(act, {"action_type" : act});
         });
         // create turn
         $("#create-turn").on("click", null, this, function(e) {
@@ -349,10 +407,10 @@ class App {
             $('.del-turn').trigger('click');
             e.data.turns = {};
         });
-        // delete all attacks, propagate to the turn-binded ones
-        $("#clear-attacks").on("click", null, this, function(e) {
-            $('.del-atk').trigger('click');
-            e.data.attacks = {};
+        // delete all actions, propagate to the turn-binded ones
+        $("#clear-actions").on("click", null, this, function(e) {
+            $('.del-act').trigger('click');
+            e.data.actions = {};
         });
 
         // delete 1 turn
@@ -362,23 +420,27 @@ class App {
             delete e.data.turns[id];
         });
 
-        // delete 1 attack, propagate to the turn binded ones
-        $(document).on("click", ".del-atk", this, function(e) {
-            let id = $(this).closest('.atk').attr("id");
-            // delete all attack links from the DOM
-            $('.turn-atk-item').each(function() {
+        $("#create-action").on("click", function() {
+            $(this).toggleClass("is-active");
+        });
+
+        // delete 1 action, propagate to the turn binded ones
+        $(document).on("click", ".del-act", this, function(e) {
+            let id = $(this).closest('.act').attr("id");
+            // delete all action links from the DOM
+            $('.turn-act-item').each(function() {
                 if ($(this).attr('data-wep-id') === id) {
                     $(this).remove();
                 }
             });
-            // delete all attack references in the turns
+            // delete all action references in the turns
             for (let key in e.data.turns) {
-                e.data.turns[key].attacks = e.data.turns[key].attacks.filter(function (tid) {
+                e.data.turns[key].actions = e.data.turns[key].actions.filter(function (tid) {
                     return tid !== id;
                 });
             }
             $("#" + id).remove();
-            delete e.data.attacks[id];
+            delete e.data.actions[id];
         });
 
         // dropdown elements
@@ -396,14 +458,14 @@ class App {
             }
         });
 
-        // deepclone the atk object, insert it and keep it on the app list
-        $(document).on("click", ".dup-atk", this, function(e) {
-            let a_id = $(this).closest(".atk").attr("id");
-            let new_info = deep_copy(e.data.attacks[a_id]);
+        // deepclone the act object, insert it and keep it on the app list
+        $(document).on("click", ".dup-act", this, function(e) {
+            let a_id = $(this).closest(".act").attr("id");
+            let new_info = deep_copy(e.data.actions[a_id]);
             new_info.id = unique_id();
             new_info.name += " Copy";
-            let new_atk = new Attack(new_info);
-            e.data.attacks[new_atk.id] = new_atk;
+            let new_act = new Attack(new_info);
+            e.data.actions[new_act.id] = new_act;
         });
 
         // deepclone the turn object, insert it and keep it on the app list
@@ -437,8 +499,8 @@ class App {
         this.turns[nturn.id] = nturn;
     }
 
-    create_attack(a) {
-        let natk = new Attack(a);
-        this.attacks[natk.id] = natk;
+    create_action(a_type, a) {
+        let nact = new action_mapping[a_type](a);
+        this.actions[nact.id] = nact;
     }
 }
