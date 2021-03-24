@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>5e - GWM/SS AC Threshold Calculator</title>
+    <link rel="icon" type="image/png" href="../img/pf2action.png">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="../css/bulma/bulma.min.css">
+    <!-- JS preload-->
+    <script type="text/javascript" src="../js/jquery.js"></script>
+</head>
+<body>
+<header class="container header">
+    <div class="hero welcome">
+        <div class="hero-body">
+            <h1 class="title is-2">
+                5e - Determining AC threshold for Great Weapon Master / Sharpshooter
+            </h1>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <form>
+            <div class="field">
+                <label class="label">Hit bonus</label>
+                <div class="control">
+                    <input class="input ref" type="text" name="hit_bonus" value="7">
+                </div>
+                <p class="help">Input your overall hit modifier without the GWM/SS penalty.</p>
+            </div>
+            <div class="field">
+                <label class="label">Average damage</label>
+                <div class="control">
+                    <input class="input ref" type="text" name="damage" value="12">
+                </div>
+                <p class="help">Input the average damage your attack would do without the GWM/SS bonus.</p>
+            </div>
+            <div class="field">
+                <label class="label">Does the attack have advantage ?</label>
+                <div class="ref">
+                    <div class="field is-narrow">
+                        <div class="control">
+                            <label class="radio">
+                                <input class="ref" type="radio" name="adv_type" id="adv0" checked>
+                                None
+                            </label>
+                            <label class="radio">
+                                <input class="ref" type="radio" name="adv_type" id="adv1">
+                                Advantage
+                            </label>
+                            <label class="radio">
+                                <input class="ref" type="radio" name="adv_type" id="adv2">
+                                Super Advantage
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <p class="help">"Super Advantage" means advantage with a reroll of one dice, such as the Elven Accuracy Feat.</p>
+                <p class="help">Using the Lucky feat on a normal attack amounts to having advantage on that attack.</p>
+                <p class="help">Using the Lucky feat on an advantage attack amounts to having super advantage on that attack.</p>
+                <p class="help">Using the Lucky feat on a super advantage attack is probably overkill.</p>
+            </div>
+        </form>
+        <div class="res hero mt-6">
+            <h3 class="title is-3">AC Threshold : <strong><span id="res-field"></span></strong></h3>
+            <h6 class="title is-6 mb-2">What do I make of this ?</h6>
+            <p>The number above is the AC for which your attack will be doing the same damage with and without Great Weapon Master / Sharpshooter.</p>
+            <p>If the thing you're hitting has a lower AC than that, you should be using the feat to maximize damage.</p>
+            <p>The "Super advantage" calculation is slightly different and thus shows a rounded AC. This is the maximal AC you can "safely" target WITH the feat.</p>
+            <p>Note : you can use any online tool to compute your attack's average damage, such as <a href="https://anydice.com/">AnyDice</a>.</p>
+        </div>
+    </div>
+</main>
+<script type="text/javascript">
+    function round(n) {
+        return Math.round((n + Number.EPSILON) * 100) / 100;
+    }
+
+    function get_sup_thresh(hit, dmg) {
+        let res = 0;
+        let basic_dmg = 0;
+        let gwm_dmg = 0;
+        let ac = 40;
+        for (; ac > 0 ; ac--) {
+            basic_dmg = (1 - Math.pow(0.05 * (ac - hit - 1), 3)) * dmg;
+            gwm_dmg = (1 - Math.pow(0.05 * (ac - hit + 4), 3)) * (dmg + 10);
+            if (gwm_dmg > basic_dmg) {
+                console.log("exit on dmg", gwm_dmg, basic_dmg, ac);
+                break;
+            }
+        }
+        return ac;
+    }
+
+    function get_thresh(hit, dmg, adv) {
+        hit = parseFloat(hit);
+        dmg = parseFloat(dmg);
+        console.log("params : ", hit, dmg, adv);
+        if (isNaN(hit) || isNaN(dmg))
+            return 0;
+        if (adv === 2)
+            return get_sup_thresh(hit, dmg);
+        if (adv === 1)
+            return round(0.5 * (2 * hit + Math.sqrt((Math.pow(dmg, 2) + 10 * dmg + 1600)) - dmg - 8));
+        return round(hit - dmg / 2 + 16);
+    }
+
+    $(".ref").on("input", function(){
+        let adv = $("#adv2").is(":checked") ? 2 : ($("#adv1").is(":checked") ? 1 : 0);
+        let hit = $("input[name='hit_bonus']").val();
+        let dmg = $("input[name='damage']").val();
+        $("#res-field").text(get_thresh(hit, dmg, adv));
+    });
+
+    $("#adv0").trigger("input");
+</script>
+</body>
+</html>
