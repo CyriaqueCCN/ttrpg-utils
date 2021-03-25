@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>5e - GWM/SS AC Threshold Calculator</title>
+    <!-- Icon -->
     <link rel="icon" type="image/png" href="../img/pf2action.png">
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="../css/bulma/bulma.min.css">
@@ -27,32 +28,33 @@
             <div class="field">
                 <label class="label">Hit bonus</label>
                 <div class="control">
-                    <input class="input ref" type="text" name="hit_bonus" value="7">
+                    <input class="input ref" type="text" id="hit_bonus" value="7">
                 </div>
                 <p class="help">Input your overall hit modifier without the GWM/SS penalty.</p>
             </div>
             <div class="field">
-                <label class="label">Average damage</label>
+                <label class="label">Attack Damage</label>
                 <div class="control">
-                    <input class="input ref" type="text" name="damage" value="12">
+                    <input class="input ref" type="text" id="damage" value="3d6+5">
                 </div>
-                <p class="help">Input the average damage your attack would do without the GWM/SS bonus.</p>
+                <p class="help">Input the damage formula you would roll without the GWM/SS bonus (eg 3d6+5).</p>
+                <p class="help">If you only have the average damage (computed by <a href="https://anydice.com/">AnyDice</a> for example), you can put it as is (for our previous example, it would be 15.5).</p>
             </div>
             <div class="field">
                 <label class="label">Does the attack have advantage ?</label>
-                <div class="ref">
+                <div>
                     <div class="field is-narrow">
                         <div class="control">
                             <label class="radio">
-                                <input class="ref" type="radio" name="adv_type" id="adv0" checked>
+                                <input class="r_ref" type="radio" name="adv_type" id="adv0" checked>
                                 None
                             </label>
                             <label class="radio">
-                                <input class="ref" type="radio" name="adv_type" id="adv1">
+                                <input class="r_ref" type="radio" name="adv_type" id="adv1">
                                 Advantage
                             </label>
                             <label class="radio">
-                                <input class="ref" type="radio" name="adv_type" id="adv2">
+                                <input class="r_ref" type="radio" name="adv_type" id="adv2">
                                 Super Advantage
                             </label>
                         </div>
@@ -70,52 +72,10 @@
             <p>The number above is the AC for which your attack will be doing the same damage with and without Great Weapon Master / Sharpshooter.</p>
             <p>If the thing you're hitting has a lower AC than that, you should be using the feat to maximize damage.</p>
             <p>The "Super advantage" calculation is slightly different and thus shows a rounded AC. This is the maximal AC you can "safely" target WITH the feat.</p>
-            <p>Note : you can use any online tool to compute your attack's average damage, such as <a href="https://anydice.com/">AnyDice</a>.</p>
         </div>
     </div>
 </main>
-<script type="text/javascript">
-    function round(n) {
-        return Math.round((n + Number.EPSILON) * 100) / 100;
-    }
-
-    function get_sup_thresh(hit, dmg) {
-        let res = 0;
-        let basic_dmg = 0;
-        let gwm_dmg = 0;
-        let ac = 40;
-        for (; ac > 0 ; ac--) {
-            basic_dmg = (1 - Math.pow(0.05 * (ac - hit - 1), 3)) * dmg;
-            gwm_dmg = (1 - Math.pow(0.05 * (ac - hit + 4), 3)) * (dmg + 10);
-            if (gwm_dmg > basic_dmg) {
-                console.log("exit on dmg", gwm_dmg, basic_dmg, ac);
-                break;
-            }
-        }
-        return ac;
-    }
-
-    function get_thresh(hit, dmg, adv) {
-        hit = parseFloat(hit);
-        dmg = parseFloat(dmg);
-        console.log("params : ", hit, dmg, adv);
-        if (isNaN(hit) || isNaN(dmg))
-            return 0;
-        if (adv === 2)
-            return get_sup_thresh(hit, dmg);
-        if (adv === 1)
-            return round(0.5 * (2 * hit + Math.sqrt((Math.pow(dmg, 2) + 10 * dmg + 1600)) - dmg - 8));
-        return round(hit - dmg / 2 + 16);
-    }
-
-    $(".ref").on("input", function(){
-        let adv = $("#adv2").is(":checked") ? 2 : ($("#adv1").is(":checked") ? 1 : 0);
-        let hit = $("input[name='hit_bonus']").val();
-        let dmg = $("input[name='damage']").val();
-        $("#res-field").text(get_thresh(hit, dmg, adv));
-    });
-
-    $("#adv0").trigger("input");
-</script>
+<script type="text/javascript" src="parser.js"></script>
+<script type="text/javascript" src="main.js"></script>
 </body>
 </html>
