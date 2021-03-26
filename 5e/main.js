@@ -26,32 +26,19 @@ function get_supadv_thresh(hit, dmg, deg) {
     return ac;
 }
 
-// TODO : move that to supadv to have a generic function
-function get_disadv_thresh(hit, dmg) {
-    let basic_dmg = 0;
-    let gwm_dmg = 0;
-    let ac = 15 + hit;
-    for (; ac > 0 ; ac--) {
-        basic_dmg = Math.pow(1 - hit_chance(ac - hit - 1), 2) * dmg;
-        gwm_dmg = Math.pow(1 - hit_chance(ac - hit + 4), 2) * (dmg + 10);
-        if (gwm_dmg > basic_dmg)
-            break;
-    }
-    return ac;
-}
-
 // maths pulled from https://forums.giantitp.com/showthread.php?472938-Great-Weapon-Mastery-How-to-5-10-Like-a-Pro
 function get_thresh(hit, dmg, adv) {
     hit = parseFloat(hit);
     dmg = get_avg(dmg);
     if (isNaN(hit) || isNaN(dmg) || dmg === 0)
         return 0;
-    if (adv === 3)
-    return get_disadv_thresh(hit, dmg);
-    if (adv === 2)
+    if (adv === 3) // disadvantage
+        return min_thresh(hit - 0.5 * (dmg + Math.sqrt(dmg * (dmg + 10))) + 16);
+    if (adv === 2) // elven accuracy
         return get_supadv_thresh(hit, dmg, 3);
-    if (adv === 1)
+    if (adv === 1) // advantage
         return min_thresh(0.5 * (2 * hit + Math.sqrt((Math.pow(dmg, 2) + 10 * dmg + 1600)) - dmg - 8));
+    // normal case, fallback
     return min_thresh(hit - dmg / 2 + 16);
 }
 
