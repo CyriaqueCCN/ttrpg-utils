@@ -1,5 +1,7 @@
 # PF2 DPR Calculator
 
+# Note : Transfered to Sycareus GitHub, pull and push there !
+
 ## About
 This tool is an attempt to build a fully functional DPR calculator for all things PF2.
 It is intended to be all client-side for ease of use and to reduce server strain.
