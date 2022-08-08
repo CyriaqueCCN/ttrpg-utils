@@ -1,6 +1,29 @@
 # PF2 DPR Calculator
 
-# Note : Transfered to Sycareus GitHub, pull and push there !
+# TODO 
+
+## Put that on internet for good usage.
+
+## Add list of software :
+
+- Arkenforge
+- Talespire
+- Dungeon Alchemist
+- Let's role
+- YAG
+- Foundry VTT
+- Fantasy Grounds
+- Roll20
+- Dungeondraft
+- Wonderdraft
+- Azgaar's fantasy map generator
+- Mode MJ DoS II
+- Inkarnate
+- Dungeon Painter Studio
+- One more multiverse
+
+
+## Note : Transfered to Sycareus GitHub, pull and push there !
 
 ## About
 This tool is an attempt to build a fully functional DPR calculator for all things PF2.
