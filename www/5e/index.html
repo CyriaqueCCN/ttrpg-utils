@@ -4,19 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>5e - GWM/SS AC Threshold Calculator</title>
-    <!-- Icon -->
-    <link rel="icon" type="image/png" href="../img/pf2action.png">
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/bulma/bulma.min.css">
-    <!-- JS preload-->
-    <script type="text/javascript" src="../js/jquery.js"></script>
+    <title>5e - GWM/SS AC Threshold Calculator | TTRPG Utils</title>
+    <link rel="shortcut icon" type="image/png" href="../img/favicon.png">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body>
 <header class="container header">
+    <p class="button"><a href="/">Back to homepage</a></p>
     <div class="hero welcome">
         <div class="hero-body">
-            <h1 class="title is-2">
+            <h1 class="title is-2 has-text-centered">
                 5e - Determining AC threshold for Great Weapon Master / Sharpshooter
             </h1>
         </div>
@@ -71,7 +69,7 @@
             </div>
         </form>
         <div class="res hero mt-6">
-            <h3 class="title is-3">AC Threshold : <strong><span id="res-field"></span></strong></h3>
+            <h2 class="title is-3 has-text-centered has-background-link-light">AC Threshold : <strong><span id="res-field"></span></strong></h2>
             <h6 class="title is-6 mb-2">What do I make of this ?</h6>
             <p>The number above is the AC for which your attack will be doing the same damage with and without Great Weapon Master / Sharpshooter.</p>
             <p>If the thing you're hitting has a lower AC than that, you should be using the feat to maximize damage.</p>
@@ -79,7 +77,7 @@
         </div>
     </div>
 </main>
-<script type="text/javascript" src="parser.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="js/parser.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

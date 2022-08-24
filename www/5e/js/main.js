@@ -53,7 +53,7 @@ var tt;
 
 $(".ref").on("keyup", function(){
     clearTimeout(tt);
-    tt = setTimeout(compute, 1000);
+    tt = setTimeout(compute, 300);
 });
 
 $(".r_ref").on("change", function(){

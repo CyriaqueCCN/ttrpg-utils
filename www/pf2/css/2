@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PF2 - DPR Calculator | TTRPG Utils</title>
+    <link rel="icon" type="image/png" href="img/pf2action.png">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/fa/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="css/divider.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <!-- JS preload-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+</head>
+<body class="site">
+    <header class="site-header">
+        <div class="notification is-warning is-pulled-left is-hidden">
+            <button class="delete del-notif"></button>
+            <p class="text-notif"></p>
+        </div>
+        <div class="clearfix container header">
+        <section class="hero is-info welcome is-small">
+            <div class="hero-body">
+                <div class="container">
+                    <button class="button is-pulled-right ml-3">
+                        <a href="/">
+                        <span class="icon">
+                            <i class="fas fa-arrow-left"></i>
+                        </span>
+                        <span>
+                            Back to homepage
+                        </span>
+                        </a>
+                    </button>
+                    <button class="button is-pulled-right" id="save">
+                        <span class="icon">
+                            <i class="fas fa-save"></i>
+                        </span>
+                        <span>
+                            Save to clipboard
+                        </span>
+                    </button>
+                    <figure class="image is-48x48 is-pulled-left">
+                        <img src="img/pf2action.png" alt="PF2 action logo">
+                    </figure>
+                    <h1 class="title">
+                        Pathfinder 2e - Attack Calculator
+                    </h1>
+                    <div class="is-clearfix"></div>
+                </div>
+            </div>
+        </section>
+        </div>
+    </header>
+    <main class="site-content">
+    <div class="container">
+        <section class="section pt-4 pb-1">
+            <div class="box">
+                <div class="columns monster-stats">
+                    <div class="column is-2"><h4 class="title is-4">Monster Stats</h4></div>
+                    <div class="column is-1">
+                        <div class="field">
+                                <input class="input monster-info" required type="number" placeholder="AC" name="monster_ac">
+                        </div>
+                    </div>
+                    <div class="column is-hidden" hidden>
+                        <div class="field">
+                            <input class="input monster-info" type="text" placeholder="Name" name="monster_name">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input monster-info" type="text"  placeholder="Debuffs (not supported yet)" name="monster_debuffs">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input monster-info" type="text"  placeholder="Vulnerabilites (not supported yet)" name="monster_vulns">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input monster-info" type="text"  placeholder="Resistances (not supported yet)" name="monster_resists">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <input class="input monster-info" type="text"  placeholder="Immunities (not supported yet)" name="monster_immuns">
+                        </div>
+                    </div>
+                    <div class="column is-hidden">
+                        <div class="field">
+                            <input class="input  monster-info"  type="text"  placeholder="Fort Save (not supported yet)" name="monster_fort">
+                        </div>
+                    </div>
+                    <div class="column is-hidden">
+                        <div class="field">
+                            <input class="input monster-info"  type="text"  placeholder="Ref Save (not supported yet)" name="monster_ref">
+                        </div>
+                    </div>
+                    <div class="column is-hidden">
+                        <div class="field">
+                            <input class="input monster-info"  type="text"  placeholder="Will Save (not supported yet)" name="monster_will">
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-4">
+                        <div class="buttons is-centered">
+                            <div class="dropdown" id="create-action">
+                                <div class="dropdown-trigger">
+                                  <button class="button is-info" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                    <span>Create Action</span>
+                                    <span class="icon is-small">
+                                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                  </button>
+                                </div>
+                                <div class="dropdown-menu" id="action-menu" role="menu">
+                                  <div class="dropdown-content">
+                                    <a class="dropdown-item create-action-btn" id="create-attack" data-action-type="Attack">
+                                      Create Attack
+                                    </a>
+                                    <a class="dropdown-item create-action-btn" id="create-spell" data-action-type="Spell">
+                                      Create Spell
+                                    </a>
+                                    <a class="dropdown-item create-action-btn" id="create-buff" data-action-type="Buff">
+                                        Create Buff
+                                    </a>
+                                    <a class="dropdown-item create-action-btn" id="create-debuff" data-action-type="Debuff">
+                                        Create Debuff
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            <button id="clear-actions" class="button is-danger">
+                                <span class="icon is-small">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                                <span>
+                                    Clear Actions
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="column is-4">
+                        <div class="buttons is-centered">
+                            <button id="simulate" class="button is-success">
+                                <span class="icon">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span>
+                                    Calculate
+                                </span>
+                            </button>
+                            <button id="clear-results" class="button is-danger">
+                                <span class="icon is-small">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                                <span>
+                                    Clear Results
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="column is-4">
+                        <div class="buttons is-centered">
+                            <button id="create-turn" class="button is-info">
+                                <span class="icon is-small">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span>
+                                    Create Turn
+                                </span>
+                            </button>
+                            <button id="clear-turns" class="button is-danger">
+                                <span class="icon is-small">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                                <span>
+                                    Clear Turns
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="columns">
+            <div class="column act-parent" id="act-div">
+                <div class="columns">
+                    <div class="column is-12">
+                        <p class="title is-12">Attacks</p>
+                    </div>
+                </div>
+            </div>
+            <div class="column divider is-vertical is-narrow is-hidden-mobile">|
+            </div>
+            <div class="column turn-parent" id="turn-div">
+                <div class="columns">
+                    <div class="column is-12">
+                        <p class="title is-12">Turns</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="divider">+</div>
+        <section class="section pt-0">
+            <p class="title is-3">Results</p>
+            <div class="columns is-multiline" id="res-div">
+            </div>
+        </section>
+    </div>
+   <!-- Templates -->
+    <template id="act-tmpl">
+        <div class="columns dpd-parent act has-background-white-bis">
+            <div class="column is-1">
+                <button class="dpd-button button is-primary mb-1">
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-up"></i>
+                    </span>
+                </button>
+                <div class="but-dpd">
+                    <button class="dup-act button is-info mb-1">
+                        <span class="icon is-small" title="Duplicate this action">
+                            <i class="fas fa-clone"></i>
+                        </span>
+                    </button>
+                    <button class="del-act button is-danger mb-1">
+                        <span class="icon is-small" title="Delete this action">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="column">
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Name</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control is-expanded">
+                                <input class="input act-name act-info" type="text" required placeholder="Weapon Name" name="act_name">
+                            </p>
+                        </div>
+                        <div class="field is-narrow">
+                            <p class="control">
+                                <input class="input act-hit-bonus act-info" type="number" placeholder="To hit" name="act_hit_bonus">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <div class="dpd">
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Weapon</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="is-expanded">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input class="input act-wep-number act-info" type="number" placeholder="0" name="act_damage_die_number">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">D</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-wep-size act-info" type="number" placeholder="0" name="act_damage_die_size">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">+</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-wep-flat act-info" type="number" placeholder="0" name="act_damage_bonus">
+                                </div>
+                            </div>
+                            <p class="help">Weapon normal damage die</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Enchantment</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="is-expanded">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input class="input act-echt-number act-info" type="number" placeholder="0" name="act_enchants_die_number">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">D</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-echt-size act-info" type="number" placeholder="0" name="act_enchants_die_size">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">+</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-echt-flat act-info" type="number" placeholder="0" name="act_enchants_damage_bonus">
+                                </div>
+                            </div>
+                            <p class="help">Weapon enchantments and bonuses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Precision</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="is-expanded">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input class="input act-prec-number act-info" type="number" placeholder="0" name="act_precision_die_number">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">D</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-prec-size act-info" type="number" placeholder="0" name="act_precision_die_size">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">+</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-prec-flat act-info" type="number" placeholder="0" name="act_precision_damage_bonus">
+                                </div>
+                            </div>
+                            <p class="help">Precision damage such as sneak attack (the flat bonus isn't multiplied on a crit)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Non-crit Bonus</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="is-expanded">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input class="input act-nc-number act-info" type="number" placeholder="0" name="act_noncrit_die_number">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">D</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-nc-size act-info" type="number" placeholder="0" name="act_noncrit_die_size">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static">+</a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-nc-flat act-info" type="number" placeholder="0" name="act_noncrit_damage_bonus">
+                                </div>
+                            </div>
+                            <p class="help">This damage will not be multiplied on a crit</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label">
+                        <label class="label">Weapon traits</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="is-expanded">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input class="input act-fatal act-info" type="number" placeholder="Fatal" name="act_fatal">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static"> / </a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-deadly act-info" type="number" placeholder="Deadly" name="act_deadly">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-static"> / </a>
+                                </div>
+                                <div class="control">
+                                    <input class="input act-crit-flat act-info" type="number" placeholder="Crit spec bonus" name="act_critspec_damage">
+                                </div>
+                            </div>
+                            <p class="help">Input the die size if the weapon has the Deadly or Fatal trait, plus the critical specialisation damage bonus (if any)</p>
+                        </div>
+                    </div>
+                </div>
+                <input class="input act-crit-flatfoot act-info is-hidden" hidden type="text" placeholder="Flatfoot on crit ?" value="false" name="act_critspec_flatfoot">
+            </div>
+            </div>
+        </div>
+    </template>
+    <template id="turn-tmpl">
+        <div class="columns dpd-parent turn has-background-white-bis is-4">
+            <div class="column is-1">
+                <button class="dpd-button button is-primary mb-1">
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-up"></i>
+                    </span>
+                </button>
+                <div class="but-dpd">
+                    <button class="dup-turn button is-info mb-1">
+                        <span class="icon is-small" title="Duplicate this turn">
+                            <i class="fas fa-clone"></i>
+                        </span>
+                    </button>
+                    <button class="del-turn button is-danger mb-1">
+                        <span class="icon is-small" title="Delete this turn">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="column is-11">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Name</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-grouped">
+                            <p class="control is-expanded">
+                                <input class="input turn-name" type="text" required placeholder="Turn Name" name="turn_name">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dpd">
+                    <div class="field is-horizontal">
+                        <div class="field-label">
+                            <label class="label">Add Attack</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field has-addons turn-act-infos">
+                                <div class="control is-expanded">
+                                    <input class="input turn-act-add-name" type="text" placeholder="Attack Name" name="turn_act-add-name">
+                                </div>
+                                <div class="control">
+                                    <a class="button is-primary turn-act-add">Add</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider">Actions</div>
+                    <div class="turn-act-list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="turn-act-tmpl">
+        <div class="field is-horizontal turn-act-item">
+            <div class="field-body">
+                <div class="field is-expanded">
+                    <div class="buttons has-addons fw-buttons">
+                        <a class="button is-static turn-act-name"><span class="turn-act-name-wrapper"></span></a>
+                        <a class="button is-danger turn-act-remove">Remove</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="res-tmpl">
+        <div class="column res-col">
+            <div class="card">
+                <div class="card-header has-text-centered">
+                    <p class="card-header-title is-centered res-name"></p>
+                </div>
+                <div class="card-content res-content"></div>
+                <div class="card-footer">
+                    <div class="card-footer-item columns res-total-col mt-0 mb-0 pb-1 pt-1">
+                        <div class="column">
+                            <p><strong>Total</strong></p>
+                        </div>
+                        <div class="column">
+                            <p><strong class="res-total"></strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="card-tmpl">
+        <div class="columns is-multiline att-col">
+            <div class="column">
+                <p class="res-att-name"></p>
+            </div>
+            <div class="column">
+                <p class="res-att-dpr"></p>
+            </div>
+        </div>
+    </template>
+    </main>
+    <footer class="site-footer">
+        <div class="footer pb-4 pt-4">
+            <div class="content has-text-centered">
+                <p><a href="https://github.com/CyriaqueCCN/PF2-DPR-Calculator/">Source code</a> - Pull requests and issues are welcome | License <a href="https://opensource.org/licenses/mit-license.php">MIT</a></p>
+            </div>
+        </div>
+    </footer>
+    <!-- JS afterload -->
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/classes.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/fa/all.js"></script>
+</body>
+</html>

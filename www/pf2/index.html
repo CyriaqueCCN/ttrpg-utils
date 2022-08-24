@@ -4,16 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PF2 - Attack Calculator</title>
-    <link rel="icon" type="image/png" href="img/pf2action.png">
+    <title>PF2 - DPR Calculator | TTRPG Utils</title>
+    <link rel="shortcut icon" type="image/png" href="../img/favicon.png">
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="css/fa/all.css">
-    <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.2/css/bulma.min.css">-->
-    <link rel="stylesheet" type="text/css" href="css/bulma/bulma.min.css">
-    <link rel="stylesheet" type="text/css" href="css/bulma/divider.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="css/divider.css">
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <!-- JS preload-->
-    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 </head>
 <body class="site">
     <header class="site-header">
@@ -22,21 +21,41 @@
             <p class="text-notif"></p>
         </div>
         <div class="clearfix container header">
-        <section class="hero is-info welcome is-small">
+        <section class="hero has-background-grey-lighter welcome is-small">
             <div class="hero-body">
-                <div class="container">
-                    <button class="button is-pulled-right" id="save">
-                        <span class="icon">
-                            <i class="fas fa-save"></i>
-                        </span>
-                        <span>
-                            Save to clipboard
-                        </span>
-                    </button>
-                    <h1 class="title">
+                <div class="columns is-vcentered mb-0">
+                    <div class="column is-1">
+                        <figure class="image is-48x48 is-pulled-left">
+                            <img src="img/pf2action.png" alt="PF2 action logo">
+                        </figure>
+                    </div>
+                    <div class="column is-7">
+                    <h1 class="title ml-3 pl-3">
                         Pathfinder 2e - Attack Calculator
                     </h1>
-                    <div class="is-clearfix"></div>
+                    </div>
+                    <div class="column is-2">
+                        <button class="button" id="save">
+                            <span class="icon">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span>
+                                Save to clipboard
+                            </span>
+                        </button>
+                    </div>
+                    <div class="column is-2">
+                        <button class="button">
+                            <a href="/">
+                            <span class="icon">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span>
+                                Back to homepage
+                            </span>
+                            </a>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -488,7 +507,7 @@
     <footer class="site-footer">
         <div class="footer pb-4 pt-4">
             <div class="content has-text-centered">
-                <p><a href="https://github.com/CyriaqueCCN/PF2-DPR-Calculator/">Source code</a> - Pull requests and issues are welcome. License <a href="https://opensource.org/licenses/mit-license.php">MIT</a>. Other works : <a href="https://docs.google.com/spreadsheets/d/1t4ZdpXQj_n8W6fUkOGCYsdd4SKJF0cnZLMDl4_o8myw">Earn income calculator</a> / <a href="5e/gwm-ss-calc.html">5e GWM/SS Calculator</a></p>
+                <p><a href="https://github.com/CyriaqueCCN/ttrpg-utils/">Source code</a> - Pull requests and issues are welcome | License <a href="https://opensource.org/licenses/mit-license.php">MIT</a></p>
             </div>
         </div>
     </footer>
