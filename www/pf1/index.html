@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>PF1 - DPR - Tueur / Vivi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    body { background:#1e1e1e; }
+
+    .stat-box {
+        background:#2b2b2b;
+        border-radius:.5rem;
+        padding:.50rem;
+        text-align:center;
+        font-size:.9rem;
+        margin: .25rem;
+    }
+    .stat-box strong {
+        display:block;
+        font-size:1.1rem;
+        color:#ffc107;
+    }
+
+    /* === OPTIONS === */
+    .option-toggle {
+        background:#f8f9fa;
+        color:#212529;
+        border:2px solid transparent;
+        border-radius:.5rem;
+        padding:.75rem;
+        cursor:pointer;
+        user-select:none;
+        transition:all .15s ease-in-out;
+    }
+
+    .option-toggle:hover {
+        border-color:#0d6efd;
+    }
+
+    .option-toggle input {
+        margin-right:.5rem;
+        transform:scale(1.2);
+    }
+
+    .option-toggle.active {
+        border-color:#198754;
+        background:#e9f7ef;
+        font-weight:600;
+    }
+
+    .optimal {
+        background:#198754 !important;
+        color:white;
+    }
+    </style>
+
+</head>
+
+<body class="text-light">
+<div class="container py-4">
+
+<h1 class="text-center mb-4">Calculateur de DPR - PF1 - Slayer 19 / Vivi 1</h1>
+
+<!-- STATS PERSONNAGE -->
+<div class="row g-2 mb-4" id="charStats"></div>
+
+<!-- OPTIONS -->
+<div class="card bg-secondary mb-4">
+  <div class="card-body">
+    <div class="row g-3 mb-3">
+      <div class="col-md-3">
+        <label class="form-label strong">Niveau</label>
+        <input type="number" id="levelIpt" class="form-control" min="1" max="20" value="3">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label strong">CA de la cible</label>
+        <input type="number" id="acIpt" class="form-control" value="13">
+      </div>
+    <div class="col-md-3 spacer">
+      </div>
+      <div class="col-md-3 my-auto">
+        <label for="fullAttackIpt" class="my-auto form-label option-toggle w-100">
+        Attaque à Outrance
+        <input class="form-check-input left" type="checkbox" id="fullAttackIpt" checked></label>
+    </div>
+    </div>
+
+    <div class="row g-3 center-text">
+
+        <div class="col-md-8 col-centered col-12">
+            <p class="strong">Options activables</p>
+        </div>
+    </div>
+
+    <div class="row g-3 center-text">
+
+    <div class="col-md-4 col-12">
+        <label class="option-toggle w-100" id="opt-studied">
+        <input class="form-check-input" type="checkbox" id="studiedIpt">
+        Cible Étudiée
+        </label>
+    </div>
+
+    <div class="col-md-4 col-12">
+        <label class="option-toggle w-100" id="opt-focused">
+        <input class="form-check-input" type="checkbox" id="focusedIpt">
+        Cible Privilégiée
+        </label>
+    </div>
+
+    <div class="col-md-4 col-12">
+        <label class="option-toggle w-100" id="opt-sneak">
+        <input class="form-check-input" type="checkbox" id="sneakIpt">
+        Attaque Sournoise
+        </label>
+    </div>
+    </div>
+    
+    <div class="row g-3 my-2 spacer">
+    </div>
+    
+    <div class="row g-3 center-text">
+
+    <div class="col-md-4 col-12">
+        <label class="option-toggle w-100" id="opt-enlarge">
+        <input class="form-check-input" type="checkbox" id="enlargeIpt">
+        Agrandissement
+        </label>
+    </div>
+
+    <div class="col-md-4 col-12">
+        <label class="option-toggle w-100" id="opt-mutagen">
+        <input class="form-check-input" type="checkbox" id="mutagenIpt">
+        Mutagène
+        </label>
+    </div>
+
+    <div class="col-md-4 col-12">
+        <label class="option-toggle w-100" id="opt-mwkukri">
+        <input class="form-check-input" type="checkbox" id="mwkukriIpt">
+        Masterwork Kukri
+        </label>
+    </div>
+    </div>
+
+    <div class="spacer mt-3"></div>
+
+<div class="row g-3">
+
+  <div class="col-md-4 col-12">
+    <label for="touchBonusIpt" class="form-label">
+      Bonus au toucher
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="touchBonusIpt"
+      placeholder="+X"
+    >
+  </div>
+
+  <div class="col-md-4 col-12">
+    <label for="damageBonusIpt" class="form-label">
+      Bonus aux dégâts
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="damageBonusIpt"
+      placeholder="+1dX + Y"
+    >
+  </div>
+
+  <div class="col-md-4 col-12">
+    <label for="sneakBonusIpt" class="form-label">
+      Bonus à la sournoise
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="sneakBonusIpt"
+      placeholder="+1dX + Y"
+    >
+  </div>
+
+</div>
+
+  </div>
+</div>
+
+<!-- RÉSULTATS NIVEAU COURANT -->
+<div class="card bg-secondary mb-4">
+  <div class="card-body">
+    <h4>Résultats - Niveau actuel</h4>
+    <ul id="results" class="list-group list-group-flush text-dark"></ul>
+    <div>
+        <p id="optimaltitle">Attaque optimale</p>
+        <div id="optimalturn">
+            Main directrice / Toucher / Dés de dégâts / Dégâts flat / Dés de sournoise
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABLEAU DPR 1-20 -->
+<div class="card bg-secondary">
+  <div class="card-body">
+    <h4 class="mb-3">DPR par niveau (1 → 20) sur les CA médianes pour un monstre de CR équivalent</h4>
+    <div class="table-responsive">
+      <table class="table table-dark table-bordered table-sm text-center text-vertical-center align-middle">
+        <thead>
+          <tr>
+            <th class="align-middle">Niv</th>
+            <th class="align-middle">CA</th>
+            <th class="align-middle">DPR</th>
+            <th class="align-middle">TWF</th>
+            <th class="align-middle">PA</th>
+            <th class="align-middle">TWF + PA</th>
+          </tr>
+        </thead>
+        <tbody id="dprTable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var DEBUG = false;
+
+// PARSER.js
+    function to_float(n) {
+        let num = parseFloat(n);
+        return isNaN(num) ? 0 : num;
+    }
+
+    function die_avg(n, s) {
+        let number = to_float(n);
+        let size = to_float(s);
+        if (number === 0 || size === 0)
+            return 0;
+        return number * (size + 1) / 2;
+    }
+
+    function get_avg(expr) {
+        let e = expr.replace(/[^0-9d\+\-\(\)\*\/\.]/gi, "");
+        let arr = e.split(/[dD]/g);
+        let i = 0;
+        let sep = /[\+\-\*\/\(\)]/g;
+        let res = "";
+        let num = 0;
+        let size = 0;
+        if (arr.length === 0)
+            return 0;
+        if (arr.length === 1)
+            res = arr[0];
+        while (i < arr.length - 1) {
+            num = arr[i].split(sep);
+            size = arr[i + 1].split(sep);
+            if (i === 0) {
+                res = arr[i].replace(new RegExp(num[num.length - 1] + "$"), "");
+            }
+            res += die_avg(num[num.length - 1], size[0]).toString();
+            res += i === arr.length - 2 ? arr[i + 1].replace(size[0], "") : arr[i + 1].replace(size[0], "").replace(new RegExp(size[size.length - 1] + "$"), "");
+            i++;
+        }
+        try {
+            eval("i = " + res);
+        } catch (e) {
+            if (DEBUG) {
+                console.log("Error in parsing expression");
+                console.log(e);
+            }
+            return 0;
+        }
+        return to_float(i);
+    }
+
+// MAIN.js
+
+function avgWeapon() {
+    if (isChecked('enlargeIpt')) {
+        return 3.5;
+    }
+    return 2.5; // Kukri in both hands
+}
+
+function diceWeapon() {
+    if (isChecked('enlargeIpt')) {
+        return "1d6";
+    }
+    return "1d4"; // Kukri in both hands
+}
+
+const avgD6 = 3.5; // Sneak Attack average
+
+// pulled from
+// https://docs.google.com/spreadsheets/d/1FGtvYLeFLiLqjHDSMQPGgnSppM9eairUtfKieWfe8qM/edit?gid=57223147#gid=57223147
+const avgAcByLevel = [
+    14, 15, 16, 17, 18,
+    18, 19, 20, 22, 23,
+    24, 26, 26, 28, 30,
+    31, 33, 34, 36, 36
+];
+
+function isChecked(query_select) {
+    return document.querySelector(`#${query_select}`).checked;
+}
+
+function strength(l) {
+    let s = l >= 20 ? 7 : (l >= 12 ? 6 : (l >= 8 ? 5 : 4));
+    if (isChecked('mutagenIpt')) {
+        s += 2;
+    }
+    return s;
+}
+
+const toHitFeats=l=>l>=13?2:l>=3?1:0;
+const primaryAttacks=l=>l>=17?4:l>=12?3:l>=7?2:1;
+const secondAttacks=l=>l>=20?4:l>=13?3:l>=7?2:l>=3?1:0;
+// TODO : combatRythm= // chiant
+const critChance=l=>l>=15?8:l>=9?6:3; // IMPROVED CRITICAL - LVL 9 ; KEEN - LVL 15
+const confirm_bonus=l=>l>=11?5:1; // CRITICAL FOCUS - LVL 11 ; Anatomist Trait - LVL 1
+const powerAttackBase=l=>1 + Math.floor((l - 1) / 4);
+const TWFMalusBase=l=>l>=3?2:4;
+//const critFocus = l => 3
+
+function powerAttackMalus(level, isPA=false) {
+    if (isPA) {
+        return powerAttackBase(level);
+    }
+    return 0;
+}
+
+function TWFmalus(level, isTWF=false) {
+    if (isTWF) {
+        return TWFMalusBase(level);
+    }
+    return 0;
+}
+
+function powerAttackDamage(level, isSecondary=false, isTWF=false, isPA=false) {
+    if (!isPA) {
+    // No bonus for you
+        return 0;
+    }
+    let damage = powerAttackBase(level);
+    if (isSecondary && isTWF) {
+        return damage;
+    }
+    return damage * 2;
+}
+
+function studiedBonus(level, focusedTarget=false, studiedTarget=false, isForDamage=false) {
+    if (!studiedTarget) {
+    // No bonus for ya
+        return 0;
+    }
+    if (focusedTarget) {
+        // FOCUSED TARGET - LVL 7
+        if (isForDamage) {
+            return level >= 11 ?
+                2 + Math.floor((level - 1) / 5):
+                1 + Math.floor((level - 1) / 5);
+        } else {
+            return level >= 7 ?
+                2 + Math.floor((level - 1) / 5):
+                1 + Math.floor((level - 1) / 5);
+        }
+    } else {
+        // CIBLE ETUDIEE - LVL 1,6,11,16
+        return 1 + Math.floor((level - 1) / 5);
+    }
+
+}
+
+function flatDamage(level, focusedTarget=false, isSecondary=false, isTWF=false, studiedTarget=false, isPA=false) {
+    return (isSecondary && isTWF ? parseInt((strength(level) / 2)) : strength(level))  // FOR or FOR/2 pour main secondaire
+        + studiedBonus(level, focusedTarget, studiedTarget, true) // Studied Bonus to Damage
+        + powerAttackDamage(level, isSecondary, isTWF, isPA) // Power Attack Damage
+        + 0;
+}
+
+function sneakDice(l){
+    if(l < 2) return 0;
+    if(l < 3) return 1;
+    if(l < 5) return 2;
+    if(l < 7) return 3;
+    if(l < 10) return 4;
+    if(l < 13 )return 5;
+    if(l < 16) return 6;
+    if(l < 19) return 7;
+    return 8;
+}
+
+function sneakDiceToString(l) {
+    return sneakDice(l).toString() + "d6";
+}
+
+function getOptionalBonus(query_select) {
+    let bonus = document.querySelector(`#${query_select}`).value;
+    if (bonus !== null) {
+        return get_avg(bonus);
+    }
+    return 0;
+}
+
+function getSneakDamage(level, isSneakAttack=false) {
+    if (!isSneakAttack) {
+        return 0;
+    }
+    return (sneakDice(level) * avgD6) // Average of sneak attack dice for the given level
+            + getOptionalBonus("sneakBonusIpt") // Circumstancial bonuses to damage not multiplied on a crit
+    ; 
+}
+
+function getTotalDamageWOSneak(level, focusedTarget=false, isSecondary=false, isTWF=false, studiedTarget=false, isPA=false) {
+    if (DEBUG) console.log("Damage params", level, studiedTarget, focusedTarget, isPA, isTWF, isSecondary);
+    let damage = avgWeapon()
+            //+ diceDamage(level, focusedTarget=focusedTarget, isSecondary=isSecondary, studiedTarget=studiedTarget, isPA=isPA)
+            + flatDamage(level, focusedTarget, isSecondary, isTWF, studiedTarget, isPA)
+            + getOptionalBonus("damageBonusIpt") // Circumstancial bonuses to damage multiplied on crit
+            //+ sneakDamage(level, isSneakAttack=isSneakAttack)
+    ;
+    if (DEBUG) console.log(`Damage total : ${damage}`);
+    return damage;
+}
+
+function getCritRatio(level) {
+    // 0.05 per crit increment
+    return 0.05 * critChance(level);
+}
+
+function getHitchance(level, ac, touch, confirmation=false) {
+    if (confirmation) {
+        touch = touch + confirm_bonus(level);
+    }
+    if (touch >= ac) {
+        return 0.95;
+    }
+    return Math.max(getCritRatio(level), Math.min(0.95, ((21 + touch - ac) / 20)));
+}
+
+function getTotalTouch(level, bba=null, studiedTarget=false, focusedTarget=false, isPA=false, isTWF=false, isSecondary=false) {
+    if (DEBUG) console.log("Touch params", level, bba, studiedTarget, focusedTarget, isPA, isTWF);
+    // TWF : -2 ; studied bonus ; focused bonus ; std touch
+    let touch = (bba === null ? level - 1 : bba) // BBA itérative
+            + (isChecked('mwkukriIpt') && !isSecondary ? 1 : 0) // Masterwork weapon in main hand ? 
+            + strength(level) // FOR
+            + studiedBonus(level, focusedTarget, studiedTarget, false) // Studied Bonus
+            + toHitFeats(level) // Feats like Weapon Focus
+            - powerAttackMalus(level, isPA) // Power Attack Malus
+            - TWFmalus(level, isTWF) // TWF Malus
+            + getOptionalBonus("touchBonusIpt") // Circumstancial bonuses to touch
+    ;
+    if (DEBUG) console.log(`Touch total : ${touch}`);
+    return touch;
+}
+
+function getHitPonderation(level, ac, touch, damage, sneak_damage) {
+    let total = 0;
+    let hit_chance = getHitchance(level, ac, touch);
+    let crit_chance = getCritRatio(level) * getHitchance(level, ac, touch, true); // Crit needs to be confirmed
+    // case 1 : crit
+    // case 1.1 : confirmation
+    total += crit_chance * damage;
+    // case 1.2 : non confirmation OR
+    // case 2 : normal hit
+    total += damage * hit_chance;
+    // case 3: ponderate average sneak damage by hit_chance (crit or not doesn't matter here)
+    total += sneak_damage * hit_chance;
+    // case 4 : miss - total = 0
+    return total;
+}
+
+function getAvgDamage(level, ac=10, bba=null, focusedTarget=false, isSecondary=false, studiedTarget=false, isTWF=false, isPA=false, isSneakAttack=false) {
+    return getHitPonderation(
+        level,
+        ac, 
+        getTotalTouch(level, bba, studiedTarget, focusedTarget, isPA, isTWF, isSecondary),
+        getTotalDamageWOSneak(level, focusedTarget, isSecondary, isTWF, studiedTarget, isPA),
+        getSneakDamage(level, isSneakAttack)
+    );
+}
+
+function generateAttacks(level, isTWF=false, isFullAttack=true) {
+
+    let res = [];
+    let res_snd = [];
+
+    for(let i = 0 ; i < (isFullAttack ? primaryAttacks(level) : 1) ; i++){
+        res.push(level - (1 + (5 * i)));
+    }
+
+    if (isTWF) {
+        for(let j = 0 ; j < (isFullAttack ? secondAttacks(level) : 1) ; j++){
+            res_snd.push(level - (1 + (5 * j)));
+        }
+        return [res, res_snd];
+    }
+
+    return res;
+}
+
+function bestOfAll(val, arr) {
+    return val >= Math.max(...arr);
+}
+
+function computeDPR(level, acValue) {
+    let isTargetFocus = focusedIpt.checked;
+    let isTargetStudied = studiedIpt.checked;
+    let isSneakEnabled = sneakIpt.checked;
+    let isFullAttack = fullAttackIpt.checked;
+
+    if (DEBUG) console.log({AC:acValue, Sneak:isSneakEnabled, Studied:isTargetStudied, Privileged:isTargetFocus});
+
+    let attacks = generateAttacks(level, false, isFullAttack);
+    let [attacks_twf_main, attacks_twf_snd] = generateAttacks(level, true, isFullAttack);
+
+    let optimal = 0;
+    let best_atks = [];
+    let best_opts = {};
+
+    let std = 0;
+    let std_twf = 0;
+    let std_pa = 0;
+    let std_pa_twf = 0;
+
+    let PAenabled = false;
+
+    // PA is off and TWF is off
+    if (DEBUG) console.log("Start No PA / No TWF");
+    for(let i = 0 ; i < attacks.length ; i++) {
+        std += getAvgDamage(level, acValue, attacks[i], isTargetFocus, false, isTargetStudied, false, PAenabled, isSneakEnabled);
+    }
+
+    if (bestOfAll(std, [std_pa, std_twf, std_pa_twf, std])) {
+        optimal = std;
+        best_atks = [attacks];
+        best_opts = {twf:false, pa:false};
+    }
+
+    // PA is off and TWF is on
+    if (DEBUG) console.log("Start No PA / TWF");
+    for(let i = 0 ; i < attacks_twf_main.length ; i++) {
+        std_twf += getAvgDamage(level, acValue, attacks_twf_main[i], isTargetFocus, false, isTargetStudied, true, PAenabled, isSneakEnabled);
+    }
+
+    for(let i = 0 ; i < attacks_twf_snd.length ; i++) {
+        std_twf += getAvgDamage(level, acValue, attacks_twf_snd[i], isTargetFocus, true, isTargetStudied, true, PAenabled, isSneakEnabled);
+    }
+
+    if (bestOfAll(std_twf, [std_pa, std_pa_twf, std])) {
+        optimal = std_twf;
+        best_atks = [attacks_twf_main, attacks_twf_snd];
+        best_opts = {twf:true, pa:false};
+    }
+
+    // PA is on and TWF is off
+    PAenabled = true;
+    if (DEBUG) console.log("Start PA / No TWF");
+    for(let i = 0 ; i < attacks.length ; i++) {
+        std_pa += getAvgDamage(level, acValue, attacks[i], isTargetFocus, false, isTargetStudied, false, PAenabled, isSneakEnabled);
+    }
+
+    if (bestOfAll(std_pa, [std_twf, std_pa_twf, std])) {
+        optimal = std_pa;
+        best_atks = [attacks];
+        best_opts = {twf:false, pa:true};
+    }
+
+    // PA is on and TWF is on
+    if (DEBUG) console.log("Start PA / TWF");
+    for(let i = 0 ; i < attacks_twf_main.length ; i++) {
+        std_pa_twf += getAvgDamage(level, acValue, attacks_twf_main[i], isTargetFocus, false, isTargetStudied, true, PAenabled, isSneakEnabled);
+    }
+
+    for(let i = 0 ; i < attacks_twf_snd.length ; i++) {
+        std_pa_twf += getAvgDamage(level, acValue, attacks_twf_snd[i], isTargetFocus, true, isTargetStudied, true, PAenabled, isSneakEnabled);
+    }
+    if (bestOfAll(std_pa_twf, [std_pa, std_twf, std])) {
+        optimal = std_pa_twf;
+        best_atks = [attacks_twf_main, attacks_twf_snd];
+        best_opts = {twf:true, pa:true};
+    }
+    //let optimal = [std, std_pa, std_twf, std_pa_twf].max()
+
+    return [std, std_pa, std_twf, std_pa_twf, optimal, best_atks, best_opts];
+}
+
+function display_atk(atk) {
+    res = "";
+    for (let i = 0 ; i < atk.length ; i++) {
+        res += "+" + atk[i].toString();
+        if (i < atk.length - 1) {
+            res += " / ";
+        }
+    }
+    return res;
+}
+
+// Params : level, [attacks_twf_main, attacks_twf_snd] , {twf:true, pa:false}
+// Display : Main directrice => Toucher / Dés de dégâts / Dégâts flat / Dés de sournoise
+function update_optimal(lvl, atks, opts) {
+
+    optimaltitle.innerHTML = `Attaque Optimale (PA ${opts.pa ? "On" : "Off"} / TWF ${opts.twf ? "On" : "Off"})`;
+    optimalturn.innerHTML = '<div class="optihand"><p class="optisubtitle">Main principale</p>';
+    amain = atks[0];
+    for (let atk of amain) {
+        optimalturn.innerHTML += `<div class="optiatk row g-2 mb-4">
+            <div class="col stat-box text-light"><strong>${getTotalTouch(lvl, atk, isChecked("studiedIpt"), isChecked("focusedIpt"), opts.pa, opts.twf, false)}</strong>Toucher</div>
+            <div class="col stat-box text-light"><strong>${diceWeapon()}</strong>Dés de dégâts</div>
+            <div class="col stat-box text-light"><strong>${flatDamage(lvl, isChecked("focusedIpt"), false, opts.twf, isChecked("studiedIpt"), opts.pa)
+                            + getOptionalBonus("damageBonusIpt")}</strong>Dégâts flat</div>
+            ${isChecked("sneakIpt") ? '<div class="col stat-box text-light"><strong>' + sneakDiceToString(lvl) + '</strong>Dés de sournoise</div>' : "" }
+            </div>`;
+    }
+    // TODO: separate dice from flat in manual bonuses for each category
+    optimalturn.innerHTML += "</div>";
+    if (atks.length > 1) {
+        optimalturn.innerHTML += '<div class="optihand"><p class="optisubtitle">Main secondaire</p>';
+        asnd = atks[1];
+        for (let atk of asnd) {
+            optimalturn.innerHTML += `<div class="optiatk row g-2 mb-4">
+            <div class="col stat-box text-light"><strong>${getTotalTouch(lvl, atk, isChecked("studiedIpt"), isChecked("focusedIpt"), opts.pa, opts.twf, true)}</strong>Toucher</div>
+            <div class="col stat-box text-light"><strong>${diceWeapon()}</strong>Dés de dégâts</div>
+            <div class="col stat-box text-light"><strong>${flatDamage(lvl, isChecked("focusedIpt"), true, opts.twf, isChecked("studiedIpt"), opts.pa)
+                            + getOptionalBonus("damageBonusIpt")}</strong>Dégâts flat</div>
+            ${isChecked("sneakIpt") ? '<div class="col stat-box text-light"><strong>' + sneakDiceToString(lvl) + '</strong>Dés de sournoise</div>' : "" }
+            </div>`;
+        }
+        optimalturn.innerHTML += '</div>';
+    }
+}
+
+function update() {
+    let lvl = +levelIpt.value;
+    let acValue = +acIpt.value; // ? +ac.value : 13;
+    let [std, std_pa, std_twf, std_pa_twf, best_score, best_atks, best_opts] = computeDPR(lvl, acValue);
+
+    update_optimal(lvl, best_atks, best_opts);
+
+    let [atk_main, atk_snd] = generateAttacks(lvl, true, fullAttackIpt.checked);
+    let txt_atk_main = display_atk(atk_main);
+    let txt_atk_snd = (atk_snd === undefined || atk_snd.length == 0) ? "-" : display_atk(atk_snd);
+
+    // TODO: better stats
+    // Character stats (top row)
+    let isTargetStudied = studiedIpt.checked
+    charStats.innerHTML = `
+        <div class="col stat-box"><strong>${getTotalTouch(lvl, null, studiedIpt.checked, focusedIpt.checked, false, false, false)}</strong>Toucher de base</div>
+        <div class="col stat-box"><strong>${txt_atk_main}</strong>Primaires</div>
+        <div class="col stat-box"><strong>${txt_atk_snd}</strong>Secondaires</div>
+        <div class="col stat-box"><strong>${sneakDice(lvl)}d6</strong>Sournoise</div>
+        <div class="col stat-box"><strong>${powerAttackBase(lvl)}</strong>Attaque en Puissance</div>
+        <div class="col stat-box"><strong>${studiedBonus(lvl, false, true, false)}</strong>Cible étudiée</div>
+        <div class="col stat-box"><strong>${studiedBonus(lvl, true, true, false)}</strong>Cible privilégiée</div>
+        <div class="col stat-box"><strong>${Math.floor(getCritRatio(lvl) * 100)}%</strong>Chance de crit</div>
+    `;
+
+    // Résultats - Niveau actuel
+    const isBest=(l,w)=>l===w;
+
+    results.innerHTML = `
+        <li class="list-group-item ${isBest(std, best_score) ? 'list-group-item-info' : ''}"><strong>DPR - No PA / No TWF :</strong> ${std.toFixed(2)} ${isBest(std, best_score) ? '(* Optimal)' : ''}</li>
+        <li class="list-group-item ${isBest(std_twf, best_score) ? 'list-group-item-info' : ''}"><strong>DPR - No PA / TWF :</strong> ${std_twf.toFixed(2)} ${isBest(std_twf, best_score) ? '(* Optimal)' : ''}</li>
+        <li class="list-group-item ${isBest(std_pa, best_score) ? 'list-group-item-info' : ''}"><strong>DPR - PA / No TWF :</strong> ${std_pa.toFixed(2)} ${isBest(std_pa, best_score) ? '(* Optimal)' : ''}</li>
+        <li class="list-group-item ${isBest(std_pa_twf, best_score) ? 'list-group-item-info' : ''}"><strong>DPR - PA / TWF :</strong> ${std_pa_twf.toFixed(2)} ${isBest(std_pa_twf, best_score) ? '(* Optimal)' : ''}</li>
+    `;
+
+    // DPR par niveau 1->20 sur CA médianes
+    dprTable.innerHTML = "";
+    for(let l = 1 ; l <= 20 ;  l++) {
+        let ca = avgAcByLevel[l - 1];
+        let [std, std_pa, std_twf, std_pa_twf, best_score, best_atks, best_opts] = computeDPR(l, ca);
+        dprTable.innerHTML += `
+            <tr>
+            <td>${l}</td>
+            <td>${ca}</td>
+            <td class="${best_score === std ?"optimal":""}">${std.toFixed(2)}</td>
+            <td class="${best_score === std_twf ?"optimal":""}">${std_twf.toFixed(2)}</td>
+            <td class="${best_score === std_pa ?"optimal":""}">${std_pa.toFixed(2)}</td>
+            <td class="${best_score === std_pa_twf ?"optimal":""}">${std_pa_twf.toFixed(2)}</td>
+            </tr>`;
+    }
+}
+
+document.querySelectorAll("input").forEach(e=>e.addEventListener("input",update));
+update();
+</script>
+
+</body>
+</html>
